@@ -1,2 +1,1 @@
-make
-LD_PRELOAD=./shim.so ./shimtest
+LD_PRELOAD=./memory_shim.so ./leakcount
