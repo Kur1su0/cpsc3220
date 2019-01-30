@@ -14,8 +14,8 @@ void free(void *ptr);
 void *malloc(size_t size);
 
 //int (*original_rand)(void) = NULL;
-int (*original_malloc)(void) = NULL;
-int (*original_free)(void) = NULL;
+void (*original_malloc)(void) = NULL;
+void (*original_free)(void) = NULL;
 
 // Called when the library is unloaded
 void cleanup(void)
@@ -43,13 +43,14 @@ void malloc_init(void)
 
 }
 
-void *(*original_malloc)(size_t size){
-    return size;
+void *malloc(size_t size){
+    printf("malloc size%zu\n",size);
+    
+
         	
 }
-int new_malloc (void)
-{
-  return original_malloc();
+void free(void *ptr){
+    printf("addr %d",&ptr);
 }
 
 
