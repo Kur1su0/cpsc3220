@@ -13,5 +13,7 @@ memory_shim.so:  memory_shim.c
 leakcount: leakcount.c
 	$(CC) $(CFLAGS) -o leakcount leakcount.c
 
+leaktest: leaktest.c
+	$(CC) $(CFLAGS) -o leaktest leaktest.c
 clean:
 	rm $(BINS)

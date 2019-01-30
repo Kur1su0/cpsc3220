@@ -1,9 +1,6 @@
 #define _GNU_SOURCE
 
-void __attribute__ ((constructor)) malloc_init(void);
-void __attribute__ ((constructor)) free_init(void);
-//void __attribute__ ((constructor)) rand_init(void);
-
+void __attribute__ ((constructor)) init(void);
 void __attribute__ ((destructor)) cleanup(void);
 
 #include <stdio.h>
@@ -13,9 +10,10 @@ void __attribute__ ((destructor)) cleanup(void);
 void free(void *ptr);
 void *malloc(size_t size);
 
+
 //int (*original_rand)(void) = NULL;
-void (*original_malloc)(void) = NULL;
-void (*original_free)(void) = NULL;
+void* (*original_malloc)(size_t size) = NULL;
+void (*original_free)(void *ptr) = NULL;
 
 // Called when the library is unloaded
 void cleanup(void)
@@ -28,7 +26,7 @@ void cleanup(void)
 /* malloc_init: redirection lib malloc to this function
  * 
  */
-void malloc_init(void)
+void init(void)
 {
   if (original_malloc == NULL)
   {
@@ -44,13 +42,12 @@ void malloc_init(void)
 }
 
 void *malloc(size_t size){
-    printf("malloc size%zu\n",size);
-    
-
-        	
+	//perror("malloc\n");
+	void *ptr = original_malloc(size);
+	return ptr;
 }
 void free(void *ptr){
-    printf("addr %d",&ptr);
+	original_free(ptr);
 }
 
 

@@ -3,36 +3,22 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #define MAXSIZE 80
 
 int main(int argc, char **argv)
 {
-	//read command line and compose.
-	char command[MAXSIZE];
-	sprintf(command,"%s",argv[1]);
-	if (argc > 2){
-		for(int i=2;  i<argc; i++ ){
-			sprintf(command,"%s %s",command,argv[i]);
-	    }	
-	}
-
     //read to fork.
     if(!fork()){ //child
-	    if(argc==2){
-			;
-			printf("%s",argv[1]);
-		}
-		else{
-			//printf()
-		}
-
-
-	}else{ //parent
-
-
+		execvp(argv[1],&argv[1]);
+	}else{ 
+		//parent
+		wait(NULL);   
+		//count for leaks and frees
 	}
 
-	printf("%s\n",command);
 	return 0;
 
 }
