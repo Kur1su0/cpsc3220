@@ -1,8 +1,5 @@
 
-
-
-#CC=clang
-CC=gcc
+CC=clang
 CFLAGS=-Wall -g
 
 BINS=leakcount memory_shim.so
