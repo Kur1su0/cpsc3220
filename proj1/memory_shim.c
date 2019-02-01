@@ -8,6 +8,7 @@ void __attribute__ ((destructor)) cleanup(void);
 #include <dlfcn.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 
 void free(void *ptr);
 void *malloc(size_t size);
@@ -47,16 +48,21 @@ void *malloc(size_t size){
 	//perror("malloc\n");
 	void *ptr = original_malloc(size);
     int file;
-    file=open("log.txt", O_RDWR|O_CREAT | O_APPEND);
-    //char what[1000];
-    //sprintf(what,"%d\n",*ptr);
-    //write(file,what,sizeof(char)+1);
+    file=open("log.txt", O_RDWR|O_CREAT|O_APPEND);
+    char what[1000];
+    sprintf(what,"malloc %p size:%zu \n",ptr,size);
+    write(file,what,strlen(what));
     close(file);
 
 	return ptr;
 }
 void free(void *ptr){
 	original_free(ptr);
+    int file;
+    file=open("log.txt", O_RDWR|O_CREAT|O_APPEND);
+    char what[1000];
+    sprintf(what,"free %p\n",ptr);
+    write(file,what,strlen(what));
 }
 
 
