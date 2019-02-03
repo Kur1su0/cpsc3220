@@ -1,9 +1,0 @@
-malloc 0x14e1010 size:1345 
-malloc 0x14e1560 size:2 
-free 0x14e1010
-malloc 0x14e1010 size:134 
-free 0x14e1560
-malloc 0x14e1560 size:1 
-malloc 0x14e10f0 size:981 
-free 0x14e10f0
-free 0x14e1560
