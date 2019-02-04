@@ -1,7 +1,7 @@
 Zice Wei
 
-###Project 1.
-##KNOWN PROBLEMS: 
+### Project 1.
+## KNOWN PROBLEMS: 
                 1. Just implement the program 1.
                 2. command such as ls, cat, cp doesn't work.
                    (child process not even running for these cases).
