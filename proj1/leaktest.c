@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	p2 = calloc(5, 12); //should be ignored
 	p3 = malloc(1);		//freed on line 19
 	p4 = malloc(981);	//freed on line 18
-	free (p4);
+	//free (p4);
 	free(p3);
 	//free(p2);			//this is a leak, but your code should not detect it (you weren't supposed to shim calloc)
 
