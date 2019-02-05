@@ -2,10 +2,10 @@
 
 
 #CC=clang
-CC=gcc
+CC=gcc -std=c99
 CFLAGS=-Wall -g
 
-BINS=leakcount memory_shim.so
+BINS=leakcount memory_shim.so sctracer# sctracertest
 
 
 all: $(BINS)
@@ -18,5 +18,12 @@ leakcount: leakcount.c
 
 leaktest: leaktest.c
 	$(CC) $(CFLAGS) -o leaktest leaktest.c
+
+sctracer: sctracer.c
+	$(CC) $(CFLAGS) -o sctracer sctracer.c
+
+#sctracertest: sctracertest.c
+#	$(CC) $(CFLAGS) -o sctracertest sctracertest.c
+
 clean:
 	rm $(BINS)

@@ -1,9 +1,0 @@
-malloc 0x752010 size:1345 
-malloc 0x752560 size:2 
-free 0x752010
-malloc 0x752010 size:134 
-free 0x752560
-malloc 0x752560 size:1 
-malloc 0x7520f0 size:981 
-free 0x7520f0
-free 0x752560
