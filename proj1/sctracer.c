@@ -30,7 +30,6 @@ void write_to_file(long system_call_table[MAXSIZE], char* output_file);
 //    return info;
 //}
 int main(int argc, char **argv) {
-    //TODO : ptrace;
     
     /* Split command in " ".  */
     char*ptr = strtok(argv[1]," ");
@@ -55,7 +54,7 @@ int main(int argc, char **argv) {
         execvp(cmd[0],cmd);
         //kill(getpid(),SIGKILL);
         
-    //TODO: call ptrace;
+    //Note: call ptrace;
     //      ptrace(PTRACE_TRACEME);
     //      ptrace(PTRACE_SYSCALL);
     //      ptrace(PTRACE_PEEKUSER);

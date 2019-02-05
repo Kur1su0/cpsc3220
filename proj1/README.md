@@ -3,6 +3,7 @@ Zice Wei
 ## Project 1.
 ### KNOWN PROBLEMS:
                 1.program 2 : additional exit_group(231).
+                2.program 2 : missed execve.
 ### DESIGN:
                 prog 1  1. designed with link list.
                         2. fork+execvp.
