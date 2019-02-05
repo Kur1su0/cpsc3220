@@ -11,5 +11,5 @@ Zice Wei
                 prog 2  1. designed wirh array.
                         2. fork+execvp.
                         
-                        reference: 1.(64-bit syscall table)[http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/]
-                                   2.(sample code for ptrace)[https://stackoverflow.com/questions/11081859/how-to-trace-a-process-for-system-calls]
+                        reference: 1.(64-bit syscall table) [http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/]
+                                   2.(sample code for ptrace) [https://stackoverflow.com/questions/11081859/how-to-trace-a-process-for-system-calls]
