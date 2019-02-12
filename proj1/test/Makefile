@@ -5,7 +5,7 @@
 CC=gcc -std=c99
 CFLAGS=-Wall -g
 
-BINS=leakcount memory_shim.so sctracer #sctracertest leaktest
+BINS=leakcount memory_shim.so sctracer leakcount sctracer
 
 
 all: $(BINS)

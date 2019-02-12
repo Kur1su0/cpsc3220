@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
 }
 
 void write_to_file(long table[MAXSIZE], char* file_path){
-    int File;
+    int File=0;
     //chmod 666: All user can read and write 
     if(File<0) perror("err open file");
     File = open(file_path,O_CREAT|O_RDWR,0666); //Not a Magic number.
