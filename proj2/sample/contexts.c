@@ -7,6 +7,8 @@ ucontext_t main_context, thread_context;
 
 int x = 0;
 
+void foo(int value);
+
 
 
 

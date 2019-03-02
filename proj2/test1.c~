@@ -1,0 +1,9 @@
+#include <stdio.h>
+#include "mythreads.h"
+
+int main(){
+
+    printf("hello TEST\n");
+
+return 0;
+}
