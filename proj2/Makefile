@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -g
 
-BINS=mythreads.o libmythreads.a test1 #cooperative_test
+BINS=mythreads.o libmythreads.a test1 cooperative_test
 
 
 all: $(BINS)
