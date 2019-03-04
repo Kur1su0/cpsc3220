@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "mythreads.h"
 
-#define MAXTHREAD 1000
+#define MAXTHREAD 5
 #define RUN       1
 #define SUSPEND   2
 #define EMPTY     0
@@ -20,7 +20,7 @@ typedef struct thread_info{
 }thread_info;
 
 typedef struct thread_head{
-    ucontext_t parent;
+    ucontext_t main;
     int total_thread_num;
     int curr_id;
     struct thread_info *info;
@@ -32,7 +32,7 @@ typedef struct thread_head{
 extern void threadInit(){
     list = (struct thread_head*)calloc(1,sizeof(thread_head));
     list->total_thread_num = MAXTHREAD;
-    list->curr_id = 0;  //from 0 to MAXTHREAD - 1 .
+    list->curr_id = -1;  //from 0 to MAXTHREAD - 1 .
     list->info = (struct thread_info*)calloc(list->total_thread_num,sizeof(struct thread_info));
     int i=0;
    
@@ -45,37 +45,79 @@ extern void threadInit(){
 
 
 extern int threadCreate(thFuncPtr funcPtr, void *argPtr){
-    int args = *((int*)argPtr);
     int id = 0;
     //assign a id for new threads.
     for(id=0; id < MAXTHREAD; id++){
         if(list->info[id].state == EMPTY) break;
 
     }
+    
     if(id >= MAXTHREAD) return -1; //out of thread pool.
     list->info[id].id = id;
     getcontext(&(list->info[id].context));
     list->info[id].context.uc_stack.ss_sp = list->info[id].stack;
     list->info[id].context.uc_stack.ss_size = STACK_SIZE;
     list->info[id].context.uc_stack.ss_flags = 0;
-    list->info[id].context.uc_link = &(list->parent);
-    
+    //list->info[id].context.uc_link = &(list->main);
+
     list->info[id].Func = funcPtr;
     list->info[id].arg = argPtr;
     list->info[id].state = RUN;
     makecontext(&(list->info[id].context), (void(*)(void))funcPtr, 1, argPtr) ;
-    swapcontext(&(list->parent),&(list->info[id].context));
-    
-
-
-    
-    
+    list->curr_id = id;
+    swapcontext(&(list->main),&(list->info[id].context));
     return id;
 }
-/*
-extern void threadYield(); 
-extern void threadJoin(int thread_id, void **result);
 
+int next_id(int cur){
+    int counter=0;
+    int i = cur+1;
+    int next = -1;
+    while(counter < MAXTHREAD+1){
+        i%=MAXTHREAD;
+	//printf("id: %d status %d\n ",i,list->info[i].state);
+	if(list->info[i].state != EMPTY && i != cur){
+	    next = i;
+	    break;
+	}
+	counter++;
+	i++;
+    }
+    //printf("cur: %d NEXT: %d\n",cur,next);
+    return next==-1?cur:next;
+}
+
+
+extern void threadYield(){
+    int id = list->curr_id;
+    int NextId = -1;
+    NextId = next_id(id);
+    //printf("id :%d, next %d\n",id,NextId);
+    //int counter = 0;
+    //int i = 0;
+    if(id != -1){
+	list->info[id].state = SUSPEND;
+        swapcontext(&(list->info[id].context)
+		   ,&(list->main));
+	list->curr_id = NextId;
+	
+    }
+
+}
+
+extern void threadJoin(int thread_id, void **result){
+    if(list->info[thread_id].state == SUSPEND){
+       //list->info[thread_id].state=RUN;
+       //list->curr_id = thread_id;
+      swapcontext(&(list->main)
+		  ,&(list->info[thread_id].context)     );
+       
+    }
+
+
+}
+
+/*
 //exits the current thread -- closing the main thread, will terminate the program
 extern void threadExit(void *result); 
 

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-ucontext_t main_context, thread_context;
+ucontext_t main_context, thread_context, p3;
 
 int x = 0;
 
@@ -45,4 +45,6 @@ int main (int argc, char **argv)
 	printf("main: not quite done yet.\n");
 	swapcontext(&main_context, &thread_context);
 	printf("main: returning\n");
-}
+
+} 
+  
