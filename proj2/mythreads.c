@@ -29,25 +29,25 @@ typedef struct thread_head{
     struct thread_head* list = NULL;
 
 //init thread
-extern void threadInit(){
+void threadInit(){
     list = (struct thread_head*)calloc(1,sizeof(thread_head));
     list->total_thread_num = MAXTHREAD;
-    list->curr_id = -1;  //from 0 to MAXTHREAD - 1 .
+    list->curr_id = 0;  //from 0 to MAXTHREAD - 1 .
     list->info = (struct thread_info*)calloc(list->total_thread_num,sizeof(struct thread_info));
     int i=0;
-   
+    list->info[0].context = list->main;
     //init all threads as empty.
     for (i=0;i<list->total_thread_num;i++){
         list->info[i].state = EMPTY;
     }
-
+    list->info[0].state = RUN;
 }
 
 
-extern int threadCreate(thFuncPtr funcPtr, void *argPtr){
-    int id = 0;
+int threadCreate(thFuncPtr funcPtr, void *argPtr){
+    int id = 1;
     //assign a id for new threads.
-    for(id=0; id < MAXTHREAD; id++){
+    for(id=1; id < MAXTHREAD; id++){
         if(list->info[id].state == EMPTY) break;
 
     }
@@ -65,7 +65,8 @@ extern int threadCreate(thFuncPtr funcPtr, void *argPtr){
     list->info[id].state = RUN;
     makecontext(&(list->info[id].context), (void(*)(void))funcPtr, 1, argPtr) ;
     list->curr_id = id;
-    swapcontext(&(list->main),&(list->info[id].context));
+    list->total_thread_num++;
+    swapcontext(&(list->info[0].context),&(list->info[id].context));
     return id;
 }
 
@@ -77,8 +78,8 @@ int next_id(int cur){
         i%=MAXTHREAD;
 	//printf("id: %d status %d\n ",i,list->info[i].state);
 	if(list->info[i].state != EMPTY && i != cur){
-	    next = i;
-	    break;
+            next = i;
+	        break;
 	}
 	counter++;
 	i++;
@@ -88,39 +89,49 @@ int next_id(int cur){
 }
 
 
-extern void threadYield(){
+void threadYield(){
     int id = list->curr_id;
     int NextId = -1;
     NextId = next_id(id);
     //printf("id :%d, next %d\n",id,NextId);
     //int counter = 0;
     //int i = 0;
-    if(id != -1){
 	list->info[id].state = SUSPEND;
-        swapcontext(&(list->info[id].context)
-		   ,&(list->main));
-	list->curr_id = NextId;
-	
-    }
+        
+      //  if(NextId == id ){
+            //printf("(from %d to main)\n",id);
+      //      swapcontext(&(list->info[id].context) ,&(list->main));
+      //  }
+       // else{
+            //printf("(from %d to %d)\n",id,NextId);
+	        list->curr_id = NextId;
+            swapcontext(&(list->info[id].context) ,&(list->info[NextId].context));
+      //      }
+    
 
 }
 
-extern void threadJoin(int thread_id, void **result){
-    if(list->info[thread_id].state == SUSPEND){
+void threadJoin(int thread_id, void **result){
+   // if(list->info[thread_id].state == SUSPEND){
        //list->info[thread_id].state=RUN;
-       //list->curr_id = thread_id;
-      swapcontext(&(list->main)
-		  ,&(list->info[thread_id].context)     );
+       //printf("join\n");
+       list->curr_id = thread_id;
+      swapcontext(&(list->info[0].context), &(list->info[thread_id].context));
        
-    }
+ //   }
 
 
 }
 
-/*
-//exits the current thread -- closing the main thread, will terminate the program
-extern void threadExit(void *result); 
 
+//exits the current thread -- closing the main thread, will terminate the program
+/*
+void threadExit(void *result){
+    int id = list->curr_id;
+    swapcontext(&(list->info[id].context) ,&(list->info[0].context));
+}
+*/
+/*
 extern void threadLock(int lockNum); 
 extern void threadUnlock(int lockNum); 
 extern void threadWait(int lockNum, int conditionNum); 

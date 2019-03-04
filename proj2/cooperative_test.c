@@ -40,7 +40,6 @@ int main(void)
 
 	//initialize the threading library. DON'T call this more than once!!!
 	threadInit();
-
 	id1 = threadCreate(t1,(void*)&p1);
 	printf("created thread 1.\n");	
 	
@@ -48,8 +47,6 @@ int main(void)
 	printf("created thread 2.\n");
 
 
-//	id3 = threadCreate(t1,(void*)&p3);
-//	printf("created thread 3.\n");
 	
 
 	threadJoin(id1, (void*)&result1);
@@ -58,7 +55,5 @@ int main(void)
 	threadJoin(id2, (void*)&result2);
 	printf("joined #2 --> %d.\n",*result2);
 
-//	threadJoin(id3, (void*)&result3);
-//	printf("joined #3 --> %d.\n",*result3);
 }
 
