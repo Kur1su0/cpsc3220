@@ -2,3 +2,5 @@ t1 started 23
 created thread 1.
 t1 started 2
 created thread 2.
+added 1! (24)
+t1: done result=24
