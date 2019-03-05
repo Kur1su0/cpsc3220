@@ -55,8 +55,8 @@ void thread_helper(int id){
     list->info[id].result = list->info[id].Func(list->info[id].arg);
     
     list->info[id].state = FINISH;
-    printf("thread%d finished\n",id);
-    printf("res:%d\n",(int*)(list->info[id].result));
+    swapcontext(&(list->info[id].context),&(list->info[0].context));
+
    
 }
 
@@ -100,7 +100,7 @@ int next_id(int cur){
     while(counter < MAXTHREAD+1){
         i%=MAXTHREAD;
 	//printf("id: %d status %d\n ",i,list->info[i].state);
-	if(list->info[i].state != EMPTY && i != cur){
+	if(list->info[i].state != EMPTY && list->info[i].state!= FINISH  && i != cur){
             next = i;
 	        break;
 	}
@@ -121,7 +121,6 @@ void threadYield(){
     if(NextId == -1) return;
     if(list->info[list->curr_id].state!=FINISH){
         list->curr_id = NextId; 
-        //printf("(%d -> %d)\n",id,NextId);
         swapcontext(&(list->info[id].context) ,&(list->info[NextId].context));
     }
     
@@ -131,25 +130,16 @@ void threadJoin(int thread_id, void **result){
     //`printf("join %d\n",thread_id);
     int current = list->curr_id; 
     int Next_id = next_id(thread_id); 
-    
+    printf("thr %d -- join\n",thread_id);
     while(list->info[thread_id].state != FINISH){
-        //result = list->info[thread_id].result;
-        //printf("res: %d\n",(int*)result);
-        //threadYield();
-        //int current = list->curr_id;
-        //int Next_id = next_id(current);
-        //list->curr_id = Next_id;
-        //printf("(%d -> %d)\n",current,Next_id);
-        //swapcontext(&(list->info[current].context),&(list->info[Next_id].context));
         threadYield();
     }
     
      
         //swapcontext(&(list->info[current].context),&(list->info[thread_id].context));
         *result = (void*)list->info[thread_id].result;
-        printf("res:%p\n",*result);
      
-    
+    list->curr_id = 0;   
 
 
 }
