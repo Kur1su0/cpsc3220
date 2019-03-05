@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "mythreads.h"
 
-#define MAXTHREAD 5
+#define MAXTHREAD 5000
 #define EMPTY     0
 #define RUN       1
 #define SUSPEND   2
@@ -33,12 +33,14 @@ typedef struct thread_head{
 }thread_head;
 
     struct thread_head* list = NULL;
-
+    int interruptsAreDisabled;
 //init thread
 void threadInit(){
+    interruptsAreDisabled = 1;
+
     list = (struct thread_head*)calloc(1,sizeof(thread_head));
     list->total_thread_num = MAXTHREAD;
-    list->curr_id = 0;  //from 0 to MAXTHREAD - 1 .
+    list->curr_id = 0;  //from 0 to MAXTHREAD - 1. 0 indicates the main thread.
     list->info = (struct thread_info*)calloc(list->total_thread_num,sizeof(struct thread_info));
     int i=0;
     list->info[0].context = list->main;
@@ -47,11 +49,12 @@ void threadInit(){
         list->info[i].state = EMPTY;
     }
     list->info[0].state = RUN;
+    
+    interruptsAreDisabled = 0;
 }
 
-//helper function for passing function to thead, if thread done, return TRUE.
+//helper function for passing function to thead, if thread done, state changed to FINISH.
 void thread_helper(int id){
-    //printf("thread %d\n",id);
     list->info[id].result = list->info[id].Func(list->info[id].arg);
     
     list->info[id].state = FINISH;
@@ -63,6 +66,8 @@ void thread_helper(int id){
 
 
 int threadCreate(thFuncPtr funcPtr, void *argPtr){
+    interruptsAreDisabled = 1;
+    
     int id = 1;
     //assign a id for new threads.
     for(id=1; id < MAXTHREAD; id++){
@@ -76,13 +81,10 @@ int threadCreate(thFuncPtr funcPtr, void *argPtr){
     list->info[id].context.uc_stack.ss_sp = list->info[id].stack;
     list->info[id].context.uc_stack.ss_size = STACK_SIZE;
     list->info[id].context.uc_stack.ss_flags = 0;
-    //list->info[id].context.uc_link = &(list->main);
 
     list->info[id].Func = funcPtr;
     list->info[id].arg = argPtr;
     list->info[id].state = RUN;
-    
-    //makecontext(&(list->info[id].context), (void(*)(void))funcPtr, 1, argPtr) ;
     
     makecontext(&(list->info[id].context),(void(*)(void))thread_helper, 1, id);
     //int current_id  = list->curr_id;//dave old id.
@@ -90,6 +92,7 @@ int threadCreate(thFuncPtr funcPtr, void *argPtr){
     list->total_thread_num++;
     //XXX: becareful with the XXX current_id XXX.
     swapcontext(&(list->info[0].context),&(list->info[id].context));
+    interruptsAreDisabled = 0;
     return id;
 }
 
@@ -107,51 +110,60 @@ int next_id(int cur){
 	counter++;
 	i++;
     }
-    //printf("cur: %d NEXT: %d\n",cur,next);
-    //return next==-1?cur:next;
-    //return next==-1?cur:next;
     return next;
 }
 
 
 void threadYield(){
+    interruptsAreDisabled = 1;
+
     int id = list->curr_id;
     int NextId = -1;
     NextId = next_id(id);
-    if(NextId == -1) return;
+    if(NextId == -1 || list->info[id].state==FINISH) return;
     if(list->info[list->curr_id].state!=FINISH){
         list->curr_id = NextId; 
         swapcontext(&(list->info[id].context) ,&(list->info[NextId].context));
     }
     
+    interruptsAreDisabled = 0;
 }
 
 void threadJoin(int thread_id, void **result){ 
-    //`printf("join %d\n",thread_id);
-    int current = list->curr_id; 
-    int Next_id = next_id(thread_id); 
-    printf("thr %d -- join\n",thread_id);
+    interruptsAreDisabled = 1;
+    if (list->info[thread_id].state == FINISH) return;
     while(list->info[thread_id].state != FINISH){
         threadYield();
-    }
-    
-     
-        //swapcontext(&(list->info[current].context),&(list->info[thread_id].context));
+
         *result = (void*)list->info[thread_id].result;
-     
+    }
     list->curr_id = 0;   
-
-
+    
+    interruptsAreDisabled = 0;
 }
 
 
 //exits the current thread -- closing the main thread, will terminate the program
-/*
+
 void threadExit(void *result){
+    interruptsAreDisabled = 1;
     int id = list->curr_id;
-    swapcontext(&(list->info[id].context) ,&(list->info[0].context));
+
+
+    if(id ==0 ) exit(0); //calling this funct in main thread causes exit of the whole program.
+    else{
+        
+        list->info[id].state = FINISH;
+        if(result!=NULL) list->info[id].result = result;
+        list->curr_id = 0;
+        swapcontext(&(list->info[id].context),&(list->info[0].context));
+       
+    }
+
+    interruptsAreDisabled = 0;
 }
-*/
+
+
 /*
 extern void threadLock(int lockNum); 
 extern void threadUnlock(int lockNum); 
