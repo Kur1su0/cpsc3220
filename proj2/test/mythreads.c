@@ -2,8 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "mythreads.h"
-//#define _XOPEN_SOURCE 800
-//#include <sys/types.h>
+
 #define MAXTHREAD 5000
 #define EMPTY     0
 #define RUN       1
@@ -33,41 +32,11 @@ typedef struct thread_head{
     struct thread_info *info;
 }thread_head;
 
-typedef struct lock_member{
-    int thread_id;
-    struct lock_member* next;
-}lock_member;
-typedef struct Lock{
-    int CondVar[CONDITIONS_PER_LOCK];
-    lock_member* head;
-    lock_member* tail;
-}Lock;
-
-//Global variables
     struct thread_head* list = NULL;
     int interruptsAreDisabled;
-    Lock lock[NUM_LOCKS];
-    int empty_lock = 0;
-//init_lock()
-void init_lock(){
-    int i = 0,j = 0;
-    for (i=0; i<NUM_LOCKS; i++){
-        lock[i].head = NULL;
-        lock[i].head = NULL;
-        for(j = 0; j < CONDITIONS_PER_LOCK; j++){
-            lock[i].CondVar[j] = -1;
-        }
-
-    }
-
-}
-
-
 //init thread
 void threadInit(){
     interruptsAreDisabled = 1;
-    
-    init_lock();
 
     list = (struct thread_head*)calloc(1,sizeof(thread_head));
     list->total_thread_num = MAXTHREAD;
@@ -87,13 +56,11 @@ void threadInit(){
 //helper function for passing function to thead, if thread done, state changed to FINISH.
 void thread_helper(int id){
     list->info[id].result = list->info[id].Func(list->info[id].arg);
-    interruptsAreDisabled = 1;
     
     list->info[id].state = FINISH;
     swapcontext(&(list->info[id].context),&(list->info[0].context));
-    
-    interruptsAreDisabled = 0;
-    
+
+   
 }
 
 
@@ -167,7 +134,6 @@ void threadJoin(int thread_id, void **result){
     if (list->info[thread_id].state == FINISH) return;
     while(list->info[thread_id].state != FINISH){
         threadYield();
-        interruptsAreDisabled = 1;
 
         *result = (void*)list->info[thread_id].result;
     }
@@ -184,21 +150,12 @@ void threadExit(void *result){
     int id = list->curr_id;
 
 
-    if(id ==0 ){
-  
-        free(list->info);
-        list->info = NULL;
-
-        free(list);
-        list = NULL;
-        exit(0); //calling this funct in main thread causes exit of the whole program.
-
-    }else{
+    if(id ==0 ) exit(0); //calling this funct in main thread causes exit of the whole program.
+    else{
         
         list->info[id].state = FINISH;
-        list->info[id].result = result;
+        if(result!=NULL) list->info[id].result = result;
         list->curr_id = 0;
-
         swapcontext(&(list->info[id].context),&(list->info[0].context));
        
     }
@@ -206,56 +163,13 @@ void threadExit(void *result){
     interruptsAreDisabled = 0;
 }
 
-void print_list(lock_member* rover){
-    while(rover!=NULL){
-        printf("%d->",rover->thread_id);
-        rover = rover->next;
-    }
-        printf("\n");
 
+/*
+extern void threadLock(int lockNum); 
+extern void threadUnlock(int lockNum); 
+extern void threadWait(int lockNum, int conditionNum); 
+extern void threadSignal(int lockNum, int conditionNum); 
 
-
-}
-
-void threadLock(int lockNum){
-    
-    //while( lock[lockNum].head != NULL){
-        int id = list->curr_id;
-        if( lock[lockNum].head == NULL){
-            lock[lockNum].head = (lock_member*)calloc(1,sizeof(lock_member));
-            lock[lockNum].tail = (lock_member*)calloc(1,sizeof(lock_member));
-            lock[lockNum].head->thread_id = id;
-            lock[lockNum].tail = lock[lockNum].head;
-            lock[lockNum].head->next = NULL;
-            lock[lockNum].tail->next = NULL;
-
-
-        }
-        
-        else{
-            printf("tail\n");
-            lock[lockNum].tail->next = (lock_member*)calloc(1,sizeof(lock_member));
-            lock[lockNum].tail = lock[lockNum].tail->next;
-            lock[lockNum].tail->thread_id = id;
-            }
-        print_list(lock[lockNum].head);
-
-
-        
-
-        
-
-    //}
-}
-
-void threadUnlock(int lockNum){
-
-}
-void threadWait(int lockNum, int conditionNum){
-
-}
-
-void threadSignal(int lockNum, int conditionNum){
-
-}
-
+//this 
+extern int interruptsAreDisabled;
+*/

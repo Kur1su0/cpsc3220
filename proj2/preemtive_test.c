@@ -19,7 +19,7 @@ void timer_handler (int signum)
 		//this printf is useful for illustration of what's happening,
 		//but rather dangerous, since a printf interrupting a malloc
 		//or other printf could cause a crash.
-		printf("--------->$$$$ interrupting\n");
+		//printf("--------->$$$$ interrupting\n");
 		threadYield();
 	}
 }
@@ -54,7 +54,7 @@ void set_timer()
 void *t1 (void *arg)
 {
 	int param = *((int*)arg);
-	printf("t1 started %d\n",param);
+//	printf("t1 started %d\n",param);
 
 	int* result = malloc(sizeof(int));
 

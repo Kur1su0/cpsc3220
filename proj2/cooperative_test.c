@@ -12,14 +12,13 @@ void *t1 (void *arg)
 	int param = *((int*)arg);
     printf("t1 started %d\n",param);
 	threadYield();
-
 	int* result = malloc(sizeof(int));
 	
     *result = param + 1;
 	printf ("added 1! (%d)\n",*result);
 	
 	threadYield();
-
+    threadLock(1);
 	printf("t1: done result=%d\n",*result);
 	return result;
 }
@@ -66,10 +65,14 @@ int main(void)
     
 
 	threadJoin(id1, (void*)&result1);
-	printf("joined #1 --> %d.\n",*result1);
+	if(result1 == NULL ) printf("t1 NULL\n");
+    printf("joined #1 --> %d.\n",*result1);
 
+    threadLock(1);
 	threadJoin(id2, (void*)&result2);
 	printf("joined #2 --> %d.\n",*result2);
-
+    free(result1);
+    free(result2);
+    threadExit((int*)1);
 }
 
