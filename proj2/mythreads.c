@@ -2,14 +2,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "mythreads.h"
-//#define _XOPEN_SOURCE 800
 //#include <sys/types.h>
 #define MAXTHREAD 5000
 #define EMPTY     0
 #define RUN       1
 #define SUSPEND   2
 #define FINISH    3
-#define JOIN      4 
+#define BLOCK      4 
 
 #define TRUE 1
 #define FALSE 0
@@ -48,6 +47,7 @@ typedef struct Lock{
     int interruptsAreDisabled;
     Lock lock[NUM_LOCKS];
     int empty_lock = 0;
+    int count = 0;
 //init_lock()
 void init_lock(){
     int i = 0,j = 0;
@@ -88,10 +88,15 @@ void threadInit(){
 void thread_helper(int id){
     list->info[id].result = list->info[id].Func(list->info[id].arg);
     interruptsAreDisabled = 1;
-    
     list->info[id].state = FINISH;
-    swapcontext(&(list->info[id].context),&(list->info[0].context));
     
+    count = 0;
+    int i = 0;
+    for(i = 1; i < MAXTHREAD ;i++){
+        if(list->info[i].state==FINISH||list->info[i].state == EMPTY) count++;
+    }
+    
+    swapcontext(&(list->info[id].context),&(list->info[0].context));
     interruptsAreDisabled = 0;
     
 }
@@ -171,7 +176,17 @@ void threadJoin(int thread_id, void **result){
 
         *result = (void*)list->info[thread_id].result;
     }
-    list->curr_id = 0;   
+    list->curr_id = 0;
+
+    if(count == MAXTHREAD -1){
+        free(list->info);
+        list->info = NULL;
+
+        free(list);
+        list = NULL;
+
+    }
+    
     
     interruptsAreDisabled = 0;
 }
@@ -208,10 +223,10 @@ void threadExit(void *result){
 
 void print_list(lock_member* rover){
     while(rover!=NULL){
-        printf("%d->",rover->thread_id);
+        //printf("%d->",rover->thread_id);
         rover = rover->next;
     }
-        printf("\n");
+        //printf("\n");
 
 
 
@@ -249,15 +264,18 @@ void delList(int lockNum){
 
 
 void threadLock(int lockNum){
+    if(list->info[list->curr_id].state == FINISH) return;
+    /*
+    while( lock[lockNum].head != NULL){
     
-    //while( lock[lockNum].head != NULL){
-    int id = list->curr_id;
+        int id = list->curr_id;
+        addList(id,lockNum );    
+        list->info[id].state = BLOCK;
+        threadYield();
+ 
+    }
+    */    
 
-    addList(id,lockNum );    
-
-        
-
-    //}
 }
 
 void threadUnlock(int lockNum){

@@ -52,7 +52,7 @@ int main(void)
 	p1 = 23; 
     p2 = 2;
 
-	int *result1, *result2;//, *result3;
+	int *result1 = NULL , *result2= NULL;//, *result3;
 
 	//initialize the threading library. DON'T call this more than once!!!
 	threadInit();
@@ -66,13 +66,12 @@ int main(void)
 
 	threadJoin(id1, (void*)&result1);
 	if(result1 == NULL ) printf("t1 NULL\n");
-    printf("joined #1 --> %d.\n",*result1);
+        printf("joined #1 --> %d.\n",*result1);
 
-    threadLock(1);
+    //threadLock(1);
 	threadJoin(id2, (void*)&result2);
 	printf("joined #2 --> %d.\n",*result2);
     free(result1);
     free(result2);
-    threadExit((int*)1);
 }
 
