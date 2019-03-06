@@ -217,31 +217,43 @@ void print_list(lock_member* rover){
 
 }
 
+
+void addList(int id,int lockNum){
+	if( lock[lockNum].head == NULL){ 
+	    lock[lockNum].head = (lock_member*)calloc(1,sizeof(lock_member));
+        lock[lockNum].tail = (lock_member*)calloc(1,sizeof(lock_member));
+        lock[lockNum].head->thread_id = id;
+        lock[lockNum].tail = lock[lockNum].head; 
+		lock[lockNum].head->next = NULL;
+        lock[lockNum].tail->next = NULL;
+
+
+     }
+        
+    else{ 
+		lock[lockNum].tail->next = (lock_member*)calloc(1,sizeof(lock_member)); 
+		lock[lockNum].tail = lock[lockNum].tail->next; 
+		lock[lockNum].tail->thread_id = id;
+            
+	} 
+	print_list(lock[lockNum].head);
+
+
+}
+void delList(int lockNum){
+
+		;
+
+}
+
+
+
 void threadLock(int lockNum){
     
     //while( lock[lockNum].head != NULL){
-        int id = list->curr_id;
-        if( lock[lockNum].head == NULL){
-            lock[lockNum].head = (lock_member*)calloc(1,sizeof(lock_member));
-            lock[lockNum].tail = (lock_member*)calloc(1,sizeof(lock_member));
-            lock[lockNum].head->thread_id = id;
-            lock[lockNum].tail = lock[lockNum].head;
-            lock[lockNum].head->next = NULL;
-            lock[lockNum].tail->next = NULL;
+    int id = list->curr_id;
 
-
-        }
-        
-        else{
-            printf("tail\n");
-            lock[lockNum].tail->next = (lock_member*)calloc(1,sizeof(lock_member));
-            lock[lockNum].tail = lock[lockNum].tail->next;
-            lock[lockNum].tail->thread_id = id;
-            }
-        print_list(lock[lockNum].head);
-
-
-        
+    addList(id,lockNum );    
 
         
 
