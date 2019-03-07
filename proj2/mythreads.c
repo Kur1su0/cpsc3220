@@ -38,6 +38,7 @@ typedef struct lock_member{
 }lock_member;
 typedef struct Lock{
     int CondVar[CONDITIONS_PER_LOCK];
+    int val;
     lock_member* head;
     lock_member* tail;
 }Lock;
@@ -54,6 +55,7 @@ void init_lock(){
     for (i=0; i<NUM_LOCKS; i++){
         lock[i].head = NULL;
         lock[i].head = NULL;
+        lock[i].val = NULL;
         for(j = 0; j < CONDITIONS_PER_LOCK; j++){
             lock[i].CondVar[j] = -1;
         }
@@ -265,16 +267,18 @@ void delList(int lockNum){
 
 void threadLock(int lockNum){
     if(list->info[list->curr_id].state == FINISH) return;
-    /*
-    while( lock[lockNum].head != NULL){
+    
+    while( lock[lockNum].val == 0){
     
         int id = list->curr_id;
-        addList(id,lockNum );    
+        addList(id,lockNum);    
         list->info[id].state = BLOCK;
         threadYield();
+        interruptsAreDisabled = 1;
  
     }
-    */    
+    if (lock[lockNum].val > 0) lock[lockNum].val = 0;
+        
 
 }
 
