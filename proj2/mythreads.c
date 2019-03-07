@@ -104,7 +104,7 @@ void thread_helper(int id){
 }
 
 
-
+//Create threads
 int threadCreate(thFuncPtr funcPtr, void *argPtr){
     interruptsAreDisabled = 1;
     
@@ -136,6 +136,7 @@ int threadCreate(thFuncPtr funcPtr, void *argPtr){
     return id;
 }
 
+//find next thread in thread pool
 int next_id(int cur){
     int counter=0;
     int i = cur+1;
@@ -153,7 +154,7 @@ int next_id(int cur){
     return next;
 }
 
-
+//yield curr thread and jump to next thread.
 void threadYield(){
     interruptsAreDisabled = 1;
 
@@ -168,7 +169,7 @@ void threadYield(){
     
     interruptsAreDisabled = 0;
 }
-
+// join thread.
 void threadJoin(int thread_id, void **result){ 
     interruptsAreDisabled = 1;
     if (list->info[thread_id].state == FINISH) return;
@@ -222,7 +223,7 @@ void threadExit(void *result){
 
     interruptsAreDisabled = 0;
 }
-
+//debug print list  func.
 void print_list(lock_member* rover){
     while(rover!=NULL){
         //printf("%d->",rover->thread_id);
@@ -234,7 +235,7 @@ void print_list(lock_member* rover){
 
 }
 
-
+//add node to list
 void addList(int id,int lockNum){
 	if( lock[lockNum].head == NULL){ 
 	    lock[lockNum].head = (lock_member*)calloc(1,sizeof(lock_member));
@@ -258,13 +259,8 @@ void addList(int id,int lockNum){
 
 }
 void delList(int lockNum){
-
-		;
-
 }
-
-
-
+//Lock thread
 void threadLock(int lockNum){
     if(list->info[list->curr_id].state == FINISH) return;
     
@@ -281,14 +277,15 @@ void threadLock(int lockNum){
         
 
 }
-
+//unlock thread
 void threadUnlock(int lockNum){
 
 }
+//wait thread
 void threadWait(int lockNum, int conditionNum){
 
 }
-
+//thread signal.
 void threadSignal(int lockNum, int conditionNum){
 
 }

@@ -1,1 +1,1 @@
-tar cvzf project2.tgz README.md Makefile mythreads.c mythreads.h
+tar cvzf project2.tgz README Makefile mythreads.c mythreads.h

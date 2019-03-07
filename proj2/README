@@ -1,0 +1,14 @@
+cpsc 3220
+Zice Wei
+
+Description:     thread with uncontext
+
+KNOWN PROBLEMS:  1. Auto grader shows threadExit cannot get correct return val but my test case works fine.
+                 2. Cannot fully free thread because this program is designed using array pointer.
+                 3. not understanding what thread lock unlock, wait and signal really does 
+                    and array pointer is rough to implement these API.
+                 4. preemetive test fails when calling printf function (not user section). Cannot be resolved.
+
+DESIGN:          Using array pointer. It easy to come up with but harder to implement the lock related API.
+
+reference: understanding the ucontext [http://pubs.opengroup.org/onlinepubs/7908799/xsh/ucontext.h.html]
