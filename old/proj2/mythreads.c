@@ -8,7 +8,7 @@
 #define RUN       1
 #define SUSPEND   2
 #define FINISH    3
-#define BLOCK      4 
+#define LOCK      4 
 
 #define TRUE 1
 #define FALSE 0
@@ -55,7 +55,7 @@ void init_lock(){
     for (i=0; i<NUM_LOCKS; i++){
         lock[i].head = NULL;
         lock[i].head = NULL;
-        lock[i].val = NULL;
+        lock[i].val = 0;
         for(j = 0; j < CONDITIONS_PER_LOCK; j++){
             lock[i].CondVar[j] = -1;
         }
@@ -224,12 +224,13 @@ void threadExit(void *result){
     interruptsAreDisabled = 0;
 }
 //debug print list  func.
-void print_list(lock_member* rover){
+void print_list(int Num){
+    lock_member* rover = lock[Num].head;
     while(rover!=NULL){
-        //printf("%d->",rover->thread_id);
+        printf("%d->",rover->thread_id);
         rover = rover->next;
     }
-        //printf("\n");
+        printf("NULL\n");
 
 
 
@@ -254,32 +255,56 @@ void addList(int id,int lockNum){
 		lock[lockNum].tail->thread_id = id;
             
 	} 
-	print_list(lock[lockNum].head);
+	//print_list(lockNum);
 
 
 }
 void delList(int lockNum){
+    lock_member* temp = lock[lockNum].head;
+    if(temp->next == NULL){
+        lock[lockNum].tail = NULL;
+        free(lock[lockNum].head);
+        lock[lockNum].head = NULL;
+                     
+    }
+    else{
+        lock[lockNum].head = lock[lockNum].head->next;
+        free(temp);
+        temp = NULL;
+    }
 }
 //Lock thread
 void threadLock(int lockNum){
-    if(list->info[list->curr_id].state == FINISH) return;
+    interruptsAreDisabled = 1;
+
+    if(list->info[list->curr_id].state == FINISH){
+        interruptsAreDisabled = 0;
+        return;
+    }
     
-    while( lock[lockNum].val == 0){
+    while( lock[lockNum].val == FALSE){
     
         int id = list->curr_id;
         addList(id,lockNum);    
-        list->info[id].state = BLOCK;
+        list->info[id].state = LOCK;
         threadYield();
         interruptsAreDisabled = 1;
  
     }
-    if (lock[lockNum].val > 0) lock[lockNum].val = 0;
-        
+    if (lock[lockNum].val == TRUE) lock[lockNum].val = FALSE;
+    interruptsAreDisabled = 0;
 
 }
 //unlock thread
 void threadUnlock(int lockNum){
+    if(list->info[list->curr_id].state == FINISH ||
+       lock[lockNum].val == FALSE) return;
 
+    if(list->curr_id == lock[lockNum].head->thread_id){
+        delList(lockNum);
+        list->info[list->curr_id].state = RUN;
+
+    }
 }
 //wait thread
 void threadWait(int lockNum, int conditionNum){

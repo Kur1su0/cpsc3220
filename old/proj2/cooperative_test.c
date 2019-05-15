@@ -18,13 +18,13 @@ void *t1 (void *arg)
 	printf ("added 1! (%d)\n",*result);
 	
 	threadYield();
-    threadLock(1);
 	printf("t1: done result=%d\n",*result);
 	return result;
 }
 
 void *t2 (void *arg)
 {
+	threadExit(arg);
 	int param = *((int*)arg);
 	
     printf("t1 started %d\n",param);
@@ -34,7 +34,6 @@ void *t2 (void *arg)
 	
     *result = param + 1;
 	printf ("added 1! (%d)\n",*result);
-	
 	threadYield();
 
 	printf("t1: done result=%d\n",*result);
@@ -69,7 +68,7 @@ int main(void)
         printf("joined #1 --> %d.\n",*result1);
 
     //threadLock(1);
-	threadJoin(id2, (void*)&result2);
+	//threadJoin(id2, (void*)&result2);
 	printf("joined #2 --> %d.\n",*result2);
     free(result1);
     free(result2);
