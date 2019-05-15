@@ -1,0 +1,239 @@
+CPSC/ECE 3220 - Study Guide for Exam 2, Summer 2018
+
+
+Coverage: OSPP textbook, chapters 5-7
+
+
+1. Be able to define and discuss the following terms:
+
+   concurrency
+   real concurrency
+   apparent concurrency
+   race condition
+   lost update problem
+
+   compiler instruction reordering
+   hardware instruction reordering
+   memory barrier
+
+   synchronization
+   critical section
+   safety property
+   liveness property
+   starvation
+   busy waiting
+   mutual exclusion
+   lock
+   acquire lock
+   release lock
+
+   condition variable
+   wait on condition variable
+   signal on condition variable
+   broadcast on condition variable
+
+   scheduling for condition variable signal under Hoare semantics
+   scheduling for condition variable signal under Mesa semantics
+   thundering herd (broadcast notify/signal)
+
+   blocking bounded queue
+   readers/writers lock
+   synchronization barrier
+
+   disable and enable interrupts
+   atomic read-modify-write instruction
+   test-and-set instruction
+   spin lock
+
+   semaphore
+
+   fine-grain locking
+   false sharing
+   per-processor data structure
+   test and test-and-set
+   MCS lock
+
+   read-copy-update (RCU)
+   publish (for RCU)
+   grace period (for RCU)
+   quiescent (for RCU)
+
+   compare-and-swap
+   optimistic concurrency control
+   lock-free data structure
+
+   deadlock
+   starvation
+   bounded resources
+   no preemption
+   wait while holding, a.k.a. multiple independent requests
+   circular waiting
+
+   mutually recursive locking
+   lock ordering
+   nested waiting
+
+   Banker's algorithm
+   safe state (with regard to deadlock)
+   unsafe state (with regard to deadlock)
+   deadlocked state
+
+   CPU burst
+   I/O-bound task
+   compute-bound task
+   workload
+
+   processor scheduling policy
+   ready list
+
+   short-term scheduler, a.k.a. dispatcher
+   medium-term scheduler, a.k.a. swapper
+   long-term scheduler, a.k.a. initiator
+
+   policy
+   mechanism
+   preemption
+   future knowledge
+   work-conserving scheduling policy
+   time quantum, a.k.a. time slice
+
+   first-in, first-out (FIFO), a.k.a. first-come, first-served (FCFS)
+   round-robin (RR)
+   multi-level feedback queue (MFQ)
+   shortest job first non-premptive
+   shortest job first premptive (SJF), a.k.a. shortest remaining time
+     next (SRTN)
+
+   dynamic priority scheduling
+   priority aging
+   priority boosting
+   priority inversion
+   priority donation, a.k.a. priority inheritance
+
+   affinity scheduling
+   oblivious scheduling
+   gang scheduling
+   space-sharing scheduling
+   scheduler activations
+   energy-aware scheduling
+   real-time scheduling
+   deadline
+
+   Little's Law
+
+
+2. Be able to perform the following:
+
+   a) Demonstrate the potential run-time problems arising from the
+      concurrent operation of many separate threads. E.g., construct
+      and/or explain an example of the lost update problem.
+   b) Use a synchronization technique to control concurrency among
+      multiple threads. E.g., implement mutual exclusion using a lock.
+   c) Identify errors in lock and condition variable usage in example
+      code segments.
+   d) Evaluate the possible performance problems of a proposed multi-
+      object locking scheme.
+   e) Compare and contrast RCU to reads/writers locks.
+   f) List the four necessary conditions for deadlock.
+   g) Contrast the three approaches to deadlock (i.e., prevention,
+      avoidance, and detect and recover).
+   h) Identify the purpose and the relative frequency of invocation
+      of the three levels of scheduling.
+   i) Identify whether or not a scheduling policy is preemptive.
+   j) Identify whether or not a scheduling policy allows starvation.
+   k) Compare and contrast the common algorithms used for both
+      preemptive and non-preemptive scheduling of threads.
+   l) Calculate individual response times for a set of tasks given
+      their arrival times, service times, and the scheduling policy.
+   m) Describe the data structures needed to support thread scheduling.
+   n) Explain the need for dynamic priority adjustments in thread
+      scheduling (e.g., priority aging and priority donation).
+   o) Answer questions such as those found in the pre-class set of
+      questions, the in-class set of questions, the in-class quizzes,
+      and the set of questions at the end of each chapter.
+
+
+Sample Exam Questions
+
+1. Briefly define:
+
+   time quantum
+   preemption
+
+2. Briefly explain the meanings of policy and mechanism and give at least
+   one example of each.
+
+     policy
+     example
+
+     mechanism
+     example
+
+Short-Term/Medium-Term/Long-Term Scheduling. Circle one or more of S, M, L,
+as applies.
+
+3. S / M / L  Is called a dispatcher
+4. S / M / L  Attempts to dynamically maintain a balanced job mix
+
+FIFO/RR/MFQ/SJF-preemptive. Circle one or more of F, R, M, S, as applies.
+
+5. F / R / M / S  Is preemptive.
+6. F / R / M / S  Uses time slices.
+7. F / R / M / S  Requires future knowledge.
+8. F / R / M / S  Has minimum average response time.
+
+T/F. Circle one of True or False.
+
+9.  T / F  A program is the unit of scheduling in a computer system.
+10. T / F  A CPU timer allows round-robin scheduling to be implemented.
+11. T / F  SJF-preemptive is used by most time-sharing systems.
+12. T / F  If you prevent deadlock by making sure one of the four conditions
+           does not hold, you will also prevent starvation.
+
+For each of the next questions, consider the following tables as the initial
+system state as seen by the Banker's algorithm approach to deadlock avoidance.
+Consider each question independently, starting each time from this initial
+state.
+
+        allocated               remaining need          available
+        R1   R2   R3            R1   R2   R3            R1   R2   R3
+        --   --   --            --   --   --            --   --   --
+  A      1    1    1             1    2    3             2    2    2
+  B      2    2    2             2    1    0
+  C      3    3    3             3    2    1
+
+13. T / F  A request by A for 1 unit of R1 can be safely granted.
+14. T / F  A request by B for 1 unit of R1 can be safely granted.
+15. T / F  A request by C for 1 unit of R1 can be safely granted.
+16. T / F  A request by A for 1 unit of R2 can be safely granted.
+
+17. Here is the code for an approach to software mutual exclusion using a
+    global "occupied" flag.
+
+     initially:		occupied = false
+
+     		Thread 1			Thread 2
+
+     T1S1	while(occupied)		T2S1	while(occupied)
+			;				;
+     T1S2	occupied = true;	T2S2	occupied = true
+     T1S3	// critical section	T2S3	// critical section
+     T1S4	occupied = false;	T2S4	occupied = false;
+
+   Show a scenario in which this approach fails to provide mutual exclusion.
+   (Give a sequence of statement using the T<i>S<j> statement ids that shows
+   exactly what is executed and when.)
+
+18. Give the individual response times for the following three tasks using
+    (a) FIFO and (b) SJF-preemptive. Assume that zero time is required for
+    a task to arrive, to be added to the queue, or to be dispatched.
+
+				FIFO	   FIFO		SJF-p	   SJF-p
+	task	arrival	service	completion response	completion response
+	name	time	time	time	   time		time	   time
+	A	0	10
+	B	1	8
+	C	3	2
+
+19. If SJF-preemptive cannot be implemented in a real system, then why is
+    it important?

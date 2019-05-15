@@ -1,0 +1,203 @@
+CPSC/ECE 3220 - Study Guide for Exam 1, Summer 2018
+
+
+Coverage: OSPP textbook, chapters 1-4
+
+
+1. Be able to define and discuss the following terms:
+
+   operating system
+   resource
+   virtualization
+
+   protection
+   security
+   privacy
+
+   proprietary system
+   open system
+
+   batch operating system
+   time-sharing operating system
+
+   virtual machine
+   host operating system
+   guest operating system
+
+   overhead
+   efficiency
+   response time
+   throughput
+   utilization
+   predictability
+   reliability
+   availability
+
+   operating system kernel
+   monolithic kernel
+   microkernel
+   portability
+   application programming interface (API)
+   hardware abstraction layer (HAL)
+   dynamically loadable device driver
+
+   bootstrap loader (bootloader)
+   boot ROM
+
+   dual-mode operation
+   user execution mode
+   kernel execution mode
+   privileged instruction
+   base and bound memory protection
+   hardware timer
+
+   program counter (PC)
+   processor status register (PSR)
+   stack pointer (SP)
+
+   interrupt (also known as an asynchronous or external interrupt)
+   system call interrupt (also known as a syscall instruction, supervisor
+		call instruction (SVC), software interrupt instruction
+		(SWI or INT), or trap instruction)
+   exception (also known as a fault or trap)
+
+   interrupt vector table
+   interrupt handler
+   return from interrupt instruction
+   interrupt masking (also known as interrupt permnission)
+   nested interrupts
+
+   poll
+   polling
+
+   user stack
+   interrupt stack (per processor)
+   kernel stack (per thread)
+   heap
+
+   system call library routine
+   stub function (also know as a wrapper function)
+   time of check versus time of use (TOCTOU)
+
+   upcall (also known as an asynchronous event)
+
+   program
+   process
+   thread
+   multithreaded process
+   PCB (process control block)
+   TCB (thread control block)
+   thread metadata
+
+   green threads
+   scheduler activations
+
+   parent process
+   child process
+   UNIX fork()
+   UNIX exec()
+   UNIX wait()
+
+   interprocess communication using UNIX pipes
+   interprocess communication using message passing
+   rendezvous
+
+   producer/consumer design pattern
+   client/server design pattern
+   event-driven design pattern
+   continuation data structure
+   asynchronous I/O
+
+   command interpreter (also known as a shell)
+
+   fork/join concurrency
+   thread create
+   thread yield
+   thread join
+   thread exit
+   thread context switch
+   voluntary thread context switch
+   involuntary thread context switch
+   thread scheduler
+   thread state (e.g., ready, running, waiting)
+   ready list
+   waiting list
+   running list
+   finished list
+
+
+2. Be able to perform the following:
+
+   a) Explain the objectives and functions of a modern operating system.
+   b) Take a specific feature or policy of an OS and explain whether it
+      represents the OS serving in the role of referee, illusionist, or
+      glue.
+   c) Contrast kernel and user mode in an operating system.
+   d) Explain the actions of hardware in response to an interrupt.
+   e) Discuss how user processes or threads invoke and interact with the
+      OS; and, be able to explain why a normal subroutine call is not
+      appropriate. (OS invocation requires a change of execution mode
+      and as well as enforcing the entry point address.)
+   f) Explain why an OS is said to be interrupt driven.
+   g) Describe the differences between a program, a process, and a thread.
+   h) Discuss how a thread is created and how it appears before first
+      being executed.
+   i) Describe the data structures needed to support thread management
+      and thread scheduling. 
+   j) Answer questions such as those found in the pre-class set of
+      questions, the in-class set of questions, the in-class quizzes,
+      and the set of questions at the end of each chapter.
+
+
+Sample Exam Questions
+
+1. Identify and briefly explain the three main roles of an OS.
+   1)
+   2)
+   3)
+
+2. Briefly define:
+
+   OS kernel
+   interrupt vector table
+   privileged instruction
+   thread context switch
+
+3. Why is a system call an intentional interrupt rather than merely a
+   subroutine call?
+
+4. The four generic actions that hardware performs in response to an
+   interrupt are:
+   1)
+   2)
+   3)
+   4)
+
+5. Explain the differences between a program, a process, and a thread.
+
+
+Multithreaded Process/Thread. Circle only one of P or T.
+
+6. P / T  Has an associated PC (program counter).
+7. P / T  Is assigned the memory map (e.g., page table).
+8. P / T  A unit of execution that is individually scheduled.
+
+
+Fill-in.
+
+9. A supervisor call instruction causes an intentional ____________________
+    to the enter the kernel of the operating system.
+
+10. To provide multiuser protection, hardware must have at least __________
+    execution modes.
+
+11. An instruction that should only be executed by the operating system is
+    called a ____________________ instruction.
+
+
+True/False. Circle only one of T or F.
+
+12. T / F  A CPU timer protects the CPU from infinite loops.
+13. T / F  Interrupt handlers are part of the software design of the OS.
+14. T / F  Different threads can be executing the same program.
+15. T / F  Each interrupt handler has an associated thread control block.

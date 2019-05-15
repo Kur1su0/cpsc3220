@@ -1,0 +1,123 @@
+CPSC/ECE 3220 - Study Guide for Final Exam, Summer 2018
+
+
+Coverage:
+  20% OSPP textbook, chapters 1-4
+  20% OSPP textbook, chapters 5-7
+  20% OSPP textbook, chapters 8-10
+  40% OSPP textbook, chapters 11-14
+
+Please see study guides 1, 2 and 3 regarding chapters 1-10.
+
+
+For chapters 11-13:
+
+1. Be able to define and discuss the following terms:
+
+   persistent storage (a.k.a. non-volatile, stable)
+   file
+   metadata
+   directory
+   connection-oriented interface
+   file descriptor (a.k.a. file handle, file stream)
+   per-open file data structure
+   open file table
+
+   path
+   absolute path
+   relative path
+
+   root directory
+   current working directory
+   home directory
+   mounting a file system
+   volume
+   partition
+
+   hard link
+   soft link
+
+   sector
+   track
+   seek
+   rotational latency
+   surface transfer time
+   host transfer time
+
+   wear out
+   wear leveling
+
+   device driver
+   logical record
+   physical record
+   logical record blocking
+   track buffer
+
+   file allocation table (FAT)
+   inode
+   indirect block
+   master file table (MFT in NTFS)
+   extent
+   defragment
+
+   access matrix
+   capability list
+   access control list
+
+   commit
+   roll back
+   transaction
+   intentions
+   redo logging
+   journaling file system
+   logging file system
+
+   RAID
+   mirroring
+   parity
+   rotated parity
+   scrubbing
+
+
+2. Be able to perform the following:
+
+   a) Explain the difference between a logical record and a physical
+      record.
+   b) Explain the benefits of logical record blocking.
+   c) Explain why files are explicitly opened by programs.
+   d) Describe the typical workload characteristics for a file system.
+   e) Identify typical contents of an inode.
+   f) Identify typical contents of a per-open file data structure (i.e.,
+        the information unique to a process after it opens a file).
+   g) Compare various design choices among FAT, FFS, and NTFS.
+   h) Explain how an access control list protects files. 
+   i) Explain how a file system can support transactions.
+   j) Explain how RAID 1 and/or RAID 5 can tolerate disk failures.
+   k) Answer questions such as those found in the pre-class set of
+      questions, the in-class set of questions, the in-class quizzes,
+      and the set of questions at the end of each chapter.
+
+
+Sample Exam Questions
+
+1. Briefly define:
+
+   metadata
+   open file table
+
+Directory entry / Inode / Per-Open Data Structure / Process Control Block.
+Circle one of D, I, PODS, or PCB, as applies.
+2. D / I / PODS / PCB  Contains filename.
+3. D / I / PODS / PCB  Contains timestamps for file.
+4. D / I / PODS / PCB  Contains a list of open files descriptors.
+5. D / I / PODS / PCB  Contains pointer to current byte or record in file.
+
+True/False. Circle either T or F.
+6. T / F  A fully-qualified path name on Unix doesn't need a device id.
+7. T / F  Unix protects files based on an access control list that is
+          summarized into three categories of users: owner, group, world.
+8. T / F  Logical record size is determined by the size of the disk sectors.
+9. T / F  A physical record is transferred in one device I/O operation.
+
+10. Explain the differences between an access control list and a capability
+    list.

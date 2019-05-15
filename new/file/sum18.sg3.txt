@@ -1,0 +1,177 @@
+CPSC/ECE 3220 - Study Guide for Exam 3, Summer 2018
+
+
+Coverage: OSPP textbook, chapters 8-10
+
+
+1. Be able to define and discuss the following terms:
+
+   address translation
+   virtual address
+   physical address
+   base and bound registers, a.k.a. relocation registers
+   segmentation
+   segment
+   external fragmentation
+   segment table
+   segment table base register
+   segment table limit register
+   segment table entry
+   core map
+   copy-on-write
+   zero-on-reference
+   paged memory
+   virtual page
+   page frame
+   internal fragmentation
+   guard page
+   page table
+   page table entry
+   paged segmentation
+   multi-level paging
+
+   TLB (translation lookaside buffer), a.k.a. address translation cache
+   TLB hit
+   TLB miss
+   superpage
+   TLB flush
+   tagged TLB
+   TLB shootdown
+
+   memory address alias
+
+   cache
+   cache hit
+   cache miss
+   direct mapped cache
+   set associative cache
+   fully associative cache
+
+   demand paging
+   page fault
+   prefetch
+
+   temporal locality
+   spatial locality
+   working set
+   phase change behavior
+   thrashing
+   Zipf distribution
+
+   replacement policy
+   first in, first out (FIFO)
+   Belady's anomaly
+   least frequently used (LFU)
+   least recently used (LRU)
+   not recently used (NRU)
+   clock algorithm (a.k.a. second-chance FIFO)
+   optimal cache replacement (a.k.a. OPT, MIN)
+   FIFO with victim buffer
+   fast reclaim
+
+   page table entry (PTE)
+   presence bit
+   access permission bits
+   dirty bit (a.k.a. changed bit, modified bit)
+   use bit (a.k.a. access bit, reference bit)
+
+   self-paging
+   page fault frequency
+   stealing a page
+   swapping
+   pin (as in pinning a page in physical memory)
+
+   page coloring
+
+   zero-copy I/O
+   shadow page table
+
+   user-level memory management
+   user-level page handler
+
+   checkpoint
+   incremental checkpoint
+   log
+   restart
+   process migration
+   
+
+2. Be able to perform the following:
+
+   a) Perform address translation given a virtual address and a
+      segment table.
+   b) Describe how a virtual memory address is mapped into a physical
+      memory address in a computer system with paged virtual memory.
+   c) Determine virtual address field sizes, page size, and page table
+      size given other parameters.
+   d) Identify typical contents of a page or segment table entry.
+   e) Use a segment and/or page table structure to determine if a
+      reference is a page hit or page fault, the access rights
+      compliance, and the physical address for a hit with allowed
+      access.
+   f) Indicate which page frame is selected given a replacement
+      policy, page table, and referenced and modified bits.
+   g) Determine hit ratios and memory contents given an address
+      reference stream and a replacement policy.
+   h) Explain the sequence of events from a page or segment fault to
+      resuming execution of the faulting process
+   i) Answer questions such as those found in the pre-class set of
+      questions, the in-class set of questions, the in-class quizzes,
+      and the set of questions at the end of each chapter.
+
+
+Sample Exam Questions
+
+Base and Bound relocation registers/Segmentation/Paged memory. Circle one or
+more of BB, S, or P, as applies.
+
+1. BB / S / P  Needs presence bits.
+2. BB / S / P  Typically uses variable-length allocation.
+3. BB / S / P  Can have internal fragmentation.
+4. BB / S / P  Can be sped up by the use of a TLB.
+5. BB / S / P  Performs a bounds/limit check on the address.
+
+6. Suppose a system with byte-addressable memory uses a 32-bit virtual
+   address and a 24-bit physical address. The pages are 4 KiB in length.
+
+   a. Consider a single-level paging approach.
+      i. Draw a diagram showing the page number/offset division of bits
+         in the virtual address.
+      ii. What is the maximum number of entries that can be in a page table?
+
+   b. Consider a two-level paging approach in which the VPN is divided in
+      half into a level-1 page number (high bits of VPN) and a level-2 page
+      number (low bits of VPN).
+      i. Draw a diagram showing the level-1 page number/level-2 page number/
+         offset division of bits in the virtual address.
+      ii. For a process with a memory image of 512 KiB, how many level-1
+          page table entries are needed?
+      iii. For a process with a memory image of 16 MiB, how many level-1
+           page table entries are needed?
+
+7. Consider a 10-page virtual memory with virtual pages numbered from 0 to
+   9, 10-word pages with words numbered from 0 to 9, a 4-page physical
+   memory with page frames numbered from 0 to 3.
+
+    VPN P R W X PFN
+       +-------+---+
+      0|0|1|0|0| 0 |	P - presence bit       0 = not present, 1 = present
+      1|1|0|0|1| 2 |	R - read permission    0 = not allowed, 1 = allowed
+      2|1|1|1|0| 1 |	W - write permission   0 = not allowed, 1 = allowed
+      3|0|1|1|0| 0 |	X - execute permission 0 = not allowed, 1 = allowed
+      4|1|1|0|0| 0 |
+      5|1|1|1|0| 3 |	PFN - page frame number
+      6|0|1|0|0| 0 |
+      7|0|1|0|0| 0 |
+      8|0|1|0|0| 0 |
+      9|0|1|0|0| 0 |
+       +-------+---+
+   Starting each time from this page table, what is the result of these
+   virtual address accesses - give either the physical address or the
+   system action (e.g., page fault, protection violation, or both).
+
+   a. read  55
+   b. read  44
+   c. write 33
+   d. write 22
+   e. inst. fetch 11
