@@ -1,13 +1,21 @@
 #include "plock.h"
 //Policy
 /*  1. Always use a consistent structure.
-    2. Always synchronize with locks and condition variables.
+
+  2. Always synchronize with locks and condition variables.
+
     3. Always acquire the lock at the beginning of the method and
+
          release it before the return.
-    5. Always wait in a while loop.
-    6. Never use thread_sleep() to make one thread wait for another;
+
+           4. Always hold the lock when operating on a condition variable.
+
+             5. Always wait in a while loop.
+
+               6. Never use thread_sleep() to make one thread wait for another;
+
                     use a condition variable instead.
-*/
+    */
 
 
 
@@ -17,8 +25,7 @@ node_t* find_thread(node_t* lock, int id, int* flag);
 void pretty_print(node_t* rover);
 
 
-plock_t *plock_create()
-{
+plock_t *plock_create(){
     //1. init plock
     plock_t* List = malloc(sizeof(plock_t));
     //2. set value to FREE.
@@ -27,7 +34,7 @@ plock_t *plock_create()
     List->head = NULL;
     //4. init mutexlock
     pthread_mutex_init(&(List->mlock),NULL);
-
+    
     return List;
 }
 
@@ -40,8 +47,7 @@ plock_t *plock_create()
  * using the appropriate pthread library call and finally frees the plock
  * data structure itself.
  */
-void plock_destroy( plock_t *lock )
-{
+void plock_destroy( plock_t *lock ){
     //return NULL;
 }
 
@@ -56,24 +62,25 @@ void plock_destroy( plock_t *lock )
  * wait on the condition variable in the node.
  *
  */
-//TODO: Check 5.5.2 implementation of Condition Variables ---
-void plock_enter( plock_t *lock, int priority )
-{
-    if(lock->head == NULL) {
+ //TODO: Check 5.5.2 implementation of Condition Variables ---
+void plock_enter( plock_t *lock, int priority ){
+    if(lock->head == NULL){
         //init thread.
         lock->head = malloc(sizeof(node_t));
-
+        
         lock->head->priority = priority;
         //TODO: Do somting with wait CV.
         lock->head->next = NULL;
-    } else {
+    }
+    else{
         int flag = 0;
         node_t* tar = find_thread(lock->head, priority, &flag);
-        if(flag==1) {
+        if(flag==1){
             //found thread. tar = desired thread.
             //TODO: Something about CV.
 
-        } else {
+        }
+        else{
             //Add to tail.
             tar->next = malloc(sizeof(node_t));
             tar->next->priority = priority;
@@ -99,10 +106,9 @@ void plock_enter( plock_t *lock, int priority )
 
 
 
-void plock_exit( plock_t *lock )
-{
+void plock_exit( plock_t *lock ){
 
-    // return NULL;
+  // return NULL;
 }
 
 
@@ -115,9 +121,8 @@ void plock_exit( plock_t *lock )
 
 // pretty_print
 //@args: rover -> head of thread list.
-void pretty_print(node_t* rover)
-{
-    while(rover != NULL) {
+void pretty_print(node_t* rover){ 
+    while(rover != NULL){
         printf("%d --> ",rover->priority);
         rover = rover->next;
     }
@@ -128,24 +133,23 @@ void pretty_print(node_t* rover)
 // @args rover  : cur node.
 // @args id     : thread priority #.
 // @args *flag  : 1--> found, 0--> not found.
-node_t* find_thread(node_t* rover, int id, int* flag)
-{
-
-    pretty_print(rover);
-    while(1) {
-        if(rover->priority == id ) {
+node_t* find_thread(node_t* rover, int id, int* flag){
+    
+    pretty_print(rover); 
+    while(1){
+        if(rover->priority == id ){
             *flag = 1;
             //printf("----Found---id:%i---\n",rover->priority);
             break;
         }
-        if(rover->next == NULL) {
+        if(rover->next == NULL){
             *flag=0;
             break;
         }
         rover = rover->next;
     }
     return rover;
-}
+} 
 
 
 
