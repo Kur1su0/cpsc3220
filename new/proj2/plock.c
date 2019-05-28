@@ -19,6 +19,11 @@ typedef struct {
 } plock_t;
 
 
+//Functions
+plock_t *plock_create();
+void plock_destroy( plock_t *lock );
+void plock_enter( plock_t *lock, int priority );
+void plock_exit( plock_t *lock );
 
 /*  plock_creat:
  *  This function calls malloc() to allocate space for an instance of the
@@ -28,7 +33,10 @@ typedef struct {
  *  a pointer to the instance.
  *
  */
-plock_t *plock_create();
+plock_t *plock_create(){
+
+    return NULL;
+}
 
 
 /* plock_destory:
@@ -38,7 +46,10 @@ plock_t *plock_create();
  * using the appropriate pthread library call and finally frees the plock
  * data structure itself.
  */
-void plock_destroy( plock_t *lock );
+void plock_destroy( plock_t *lock ){
+
+    return NULL;
+}
 
 
 
@@ -55,7 +66,10 @@ void plock_destroy( plock_t *lock );
  *
  */
 
-void plock_enter( plock_t *lock, int priority );
+void plock_enter( plock_t *lock, int priority ){
+
+    return NULL;
+}
 
 
 
@@ -70,4 +84,7 @@ void plock_enter( plock_t *lock, int priority );
 
 
 
-void plock_exit( plock_t *lock );
+void plock_exit( plock_t *lock ){
+
+   return NULL;
+}
