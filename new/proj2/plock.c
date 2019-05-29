@@ -16,6 +16,7 @@
 node_t* find_thread(node_t* lock, int id, int* flag);
 void pretty_print(node_t* rover);
 
+void insert_thread(node_t* head, int priority);
 
 plock_t *plock_create()
 {
