@@ -11,12 +11,17 @@
 
 
 
-
 //local helper func.
 node_t* find_thread(node_t* lock, int id, int* flag);
 void pretty_print(node_t* rover);
-
 void insert_thread(node_t* head, int priority);
+//enQ : insert into Queue in order of high priority
+//      return node's pos.
+node_t* enQ(node_t** head, int priority);
+//deQ : remove node from Q and return it.
+node_t* deQ(node_t** head);
+
+
 
 plock_t *plock_create()
 {
@@ -60,31 +65,12 @@ void plock_destroy( plock_t *lock )
 //TODO: Check 5.5.2 implementation of Condition Variables ---
 void plock_enter( plock_t *lock, int priority )
 {
-    if(lock->head == NULL) {
-        //init thread.
-        lock->head = malloc(sizeof(node_t));
+    //pthread_mutex_lock(&lock->mlock);
+    node_t* what = enQ(&(lock->head), priority);
+    pretty_print(lock->head);
+    //pthread_mutex_unlock(&lock->mlock);
 
-        lock->head->priority = priority;
-        //TODO: Do somting with wait CV.
-        lock->head->next = NULL;
-    } else {
-        int flag = 0;
-        node_t* tar = find_thread(lock->head, priority, &flag);
-        if(flag==1) {
-            //found thread. tar = desired thread.
-            //TODO: Something about CV.
 
-        } else {
-            //Add to tail.
-            tar->next = malloc(sizeof(node_t));
-            tar->next->priority = priority;
-            //Set up: 1.CV.
-            tar->next->next = NULL;
-
-        }
-
-    }
-    //return NULL;
 }
 
 
@@ -149,5 +135,45 @@ node_t* find_thread(node_t* rover, int id, int* flag)
 }
 
 
+
+node_t* enQ(node_t** head, int priority){
+    node_t* rover = *head;
+    
+    node_t* tar = malloc(sizeof(node_t));
+    tar->priority = priority;
+    pthread_cond_init(&(tar->waitCV), NULL);
+    tar->next = NULL;
+
+    if(rover == NULL) {
+        *head = tar;
+        (*head)->next = NULL;
+
+    } else {
+        //Greatest, then 
+        if(rover->priority < priority ){
+            tar->next = *head;
+            *head = tar;
+        }
+        if(rover->priority >= priority){
+            while(rover->next != NULL){
+                if( priority > rover->next->priority && priority <= rover->priority) break;
+                rover = rover->next;
+            }
+            
+            tar->next = rover->next;
+            rover->next = tar;
+        }
+
+    }
+
+    return tar;
+}
+//deQ : remove node from Q and return it.
+node_t* deQ(node_t** head){
+    node_t* rover = *head;
+    *head = (*head) ->next;
+    return rover;
+
+}
 
 
