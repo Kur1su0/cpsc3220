@@ -24,4 +24,5 @@ plock_t *plock_create();
 void plock_destroy( plock_t *lock );
 void plock_enter( plock_t *lock, int priority);
 void plock_exit( plock_t *lock );
+node_t* enQ(node_t** head, int priority);
 

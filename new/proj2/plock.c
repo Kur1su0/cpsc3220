@@ -20,7 +20,7 @@ void insert_thread(node_t* head, int priority);
 node_t* enQ(node_t** head, int priority);
 //deQ : remove node from Q and return it.
 node_t* deQ(node_t** head);
-
+void clean_node(node_t** _node);
 
 
 plock_t *plock_create()
@@ -46,9 +46,20 @@ plock_t *plock_create()
  * using the appropriate pthread library call and finally frees the plock
  * data structure itself.
  */
+
 void plock_destroy( plock_t *lock )
 {
-    //return NULL;
+    node_t* rover = NULL;
+    while(lock->head!=NULL){
+        rover = lock->head;
+        lock->head = lock->head->next;
+	clean_node(&rover);
+    }
+    pthread_mutex_destroy(&lock->mlock);
+    free(lock);
+    lock = NULL;
+
+
 }
 
 /* plock_enter
@@ -65,21 +76,31 @@ void plock_destroy( plock_t *lock )
 //TODO: Check 5.5.2 implementation of Condition Variables ---
 void plock_enter( plock_t *lock, int priority )
 {
-    int stats = lock->value;
-    
     pthread_mutex_lock(&lock->mlock);
     
-    node_t* what = enQ(&(lock->head), priority);
-    
-    while( lock->value == BUSY && 
-           (priority == lock->head->priority) ){
-        
-        pthread_cond_wait(&lock->value,&lock->mlock);
+    //lock->value = BUSY;
+    node_t* what = NULL;
+    int flag = 0;
+    //printf("im in\n");
+     if(lock->head == NULL){
+        lock->value=FREE;
+    }else{
+        lock->value=BUSY;
     }
     
-    pretty_print(lock->head);
     
-    pthread_mutex_unlock(&lock->mlock);
+    what = enQ(&(lock->head), priority);
+
+    
+    while(lock->value==BUSY && priority!=lock->head->priority){
+        pthread_cond_wait(&what->waitCV, &lock->mlock );
+    }
+    //pretty_print(lock->head);
+    what=deQ(&lock->head);
+    printf("%s\n",lock->value==FREE?"FREE":"BUSY");
+    clean_node(&what);
+    
+    pthread_mutex_unlock(&(lock->mlock));
 
 
 }
@@ -99,9 +120,20 @@ void plock_enter( plock_t *lock, int priority )
 
 void plock_exit( plock_t *lock )
 {
-
-    pthread_mutex_unlock(&lock->mlock);
+    //printf("in side of EXIT\n");
+    
+    pthread_mutex_lock(&lock->mlock);
+    
+    //node_t* what = deQ(&lock->head);
+    if(lock->value==BUSY){
+        pthread_cond_signal(&lock->head->waitCV);
+       // clean_node(&what);   
+    lock->value = FREE;
+    }
+    
+    //pthread_mutex_unlock(&lock->mlock);
     // return NULL;
+    //printf("out of EXIT\n");
 }
 
 
@@ -153,18 +185,25 @@ node_t* enQ(node_t** head, int priority){
     
     node_t* tar = malloc(sizeof(node_t));
     tar->priority = priority;
-    pthread_cond_init(&(tar->waitCV), NULL);
+    pthread_cond_init(&tar->waitCV, NULL);
     tar->next = NULL;
 
-    if(rover == NULL) {
-        *head = tar;
-        (*head)->next = NULL;
+    if(rover == NULL /*|| rover->next == NULL*/) { //may change.
+        //if(rover ==NULL){
+	    *head = tar;
+            (*head)->next = NULL;
+	//}else{
+        //    (*head)->next=tar;
+        //    (*head)->next->next=NULL;
+
+	//}
 
     } else {
+	//rover = rover->next;
         //Greatest, then 
         if(rover->priority < priority ){
-            tar->next = *head;
-            *head = tar;
+            tar->next = (*head); //skip 1st node.
+            (*head) = tar;
         }
         if(rover->priority >= priority){
             while(rover->next != NULL){
@@ -177,7 +216,6 @@ node_t* enQ(node_t** head, int priority){
         }
 
     }
-
     return tar;
 }
 //deQ : remove node from Q and return it.
@@ -188,4 +226,11 @@ node_t* deQ(node_t** head){
 
 }
 
+void clean_node(node_t** what){
+    pthread_cond_destroy(&(*what)->waitCV);
+    (*what)->next = NULL;
+    free(*what);
+    what = NULL;
 
+
+}

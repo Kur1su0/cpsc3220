@@ -49,11 +49,14 @@ int main( int argc, char **argv )
 
 
     for( i = 0; i < 20 ; i++ ) {
-        rc = pthread_create( &threads[i], NULL, &worker, (void *)( args[i] ) );
-        if( rc ) {
+        printf("---%d---\n",i);
+	    rc = pthread_create( &threads[i], NULL, &worker, (void *)( args[i] ) );
+        
+	if( rc ) {
             printf( "** could not create thread %d\n", i );
             exit( -1 );
         }
+
         if( ( i & 3 ) == 0 ) sleep( 1 );
     }
 

@@ -58,29 +58,14 @@ int main( int argc, char **argv )
  //         plock_enter(priority_lock,i);
  //  }
 
-          plock_enter(priority_lock,2,1);
-          plock_enter(priority_lock,3,1);
-          plock_enter(priority_lock,4,1);
-          plock_enter(priority_lock,5,1);
-          plock_enter(priority_lock,4,2);
-          plock_enter(priority_lock,4,3);
-          plock_enter(priority_lock,4,4);
-          plock_enter(priority_lock,4,5);
-          plock_enter(priority_lock,4,6);
-          
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
-          deQ(&(priority_lock->head));
+          enQ(&priority_lock->head, 4);
+          enQ(&priority_lock->head, 5);
+          enQ(&priority_lock->head, 2);
+          enQ(&priority_lock->head, 9);
+          enQ(&priority_lock->head, 8);
 
-//  }
+         deQ(&priority_lock->head);
+	  //  }
  //  }
  //  }
 exit(1);
