@@ -17,9 +17,9 @@ void pretty_print(node_t* rover);
 void insert_thread(node_t* head, int priority);
 //enQ : insert into Queue in order of high priority
 //      return node's pos.
-node_t* enQ(node_t** head, int priority);
+//node_t* enQ(node_t** head, int priority);
 //deQ : remove node from Q and return it.
-node_t* deQ(node_t** head);
+//node_t* deQ(node_t** head);
 void clean_node(node_t** _node);
 
 node_t* RUNNING = NULL;
@@ -81,8 +81,9 @@ void plock_enter( plock_t *lock, int priority )
     pthread_mutex_lock(&lock->mlock);
     node_t* what = NULL;
 
-    what = enQ(&(lock->head), priority);
+    //what = enQ(&(lock->head), priority);
     //lock->value=lock->head!=NULL?BUSY:FREE;
+
     while(1){
 	
 	if(lock->value==FREE && priority==lock->head->priority){
@@ -141,7 +142,7 @@ void plock_exit( plock_t *lock )
 void pretty_print(node_t* rover)
 {
     while(rover != NULL) {
-        printf("%d --> ",rover->priority);
+        printf("(%d,%d) --> ",rover->priority,rover->time);
         rover = rover->next;
     }
     if(rover == NULL) printf("NULL\n");
@@ -172,11 +173,12 @@ node_t* find_thread(node_t* rover, int id, int* flag)
 
 
 
-node_t* enQ(node_t** head, int priority){
+node_t* enQ(node_t** head, int priority,int time){
     node_t* rover = *head;
     
     node_t* tar = malloc(sizeof(node_t));
     tar->priority = priority;
+    tar->time = time;
     pthread_cond_init(&tar->waitCV, NULL);
     tar->next = NULL;
 

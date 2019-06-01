@@ -8,6 +8,7 @@
 
 typedef struct node_def {
     int priority;           /* priority of the waiting thread          */
+    int time;
     pthread_cond_t waitCV;  /* thread waits on this condition variable */
     struct node_def *next;  /* node is part of a singly-linked list    */
 } node_t;
@@ -24,4 +25,6 @@ plock_t *plock_create();
 void plock_destroy( plock_t *lock );
 void plock_enter( plock_t *lock, int priority);
 void plock_exit( plock_t *lock );
+node_t* enQ( node_t** lock, int p, int t );
+node_t* deQ( node_t** lock );
 void pretty_print(node_t* _node);

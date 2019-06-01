@@ -14,7 +14,7 @@
 plock_t *priority_lock;      /* global lock shared among worker threads */
 
 
-
+/*
 void *worker( void *args )
 {
 
@@ -30,7 +30,7 @@ void *worker( void *args )
 }
 
 
-
+*/
 int main( int argc, char **argv )
 {
 
@@ -48,17 +48,37 @@ int main( int argc, char **argv )
 
 
 
-    for( i = 0; i < 20 ; i++ ) {
-	    rc = pthread_create( &threads[i], NULL, &worker, (void *)( args[i] ) );
-	if( rc ) {
-            printf( "** could not create thread %d\n", i );
-            exit( -1 );
-        }
+//    for( i = 0; i < 20 ; i++ ) {
+ //       rc = pthread_create( &threads[i], NULL, &worker, (void *)( args[i] ) );
+ //       if( rc ) {
+ //           printf( "** could not create thread %d\n", i );
+ //           exit( -1 );
+ //       }
+ //       if( ( i & 3 ) == 0 ) sleep( 1 );
+ //         plock_enter(priority_lock,i);
+ //  }
 
-        if( ( i & 3 ) == 0 ) sleep( 1 );
-    }
+          enQ(&priority_lock->head, 4,1);
+          pretty_print(priority_lock->head);
+	  
+	  enQ(&priority_lock->head, 5,1);
+          pretty_print(priority_lock->head);
+          
+	  enQ(&priority_lock->head, 2,1);
+          pretty_print(priority_lock->head);
+          
+	  enQ(&priority_lock->head, 4,2);
+          pretty_print(priority_lock->head);
+          
+	  enQ(&priority_lock->head, 8,1);
+          pretty_print(priority_lock->head);
 
-
+          deQ(&priority_lock->head);
+          pretty_print(priority_lock->head);
+	  //  }
+ //  }
+ //  }
+exit(1);
 
     for( i = 0; i < 20; i++ ) {
         rc = pthread_join( threads[i], NULL );

@@ -55,7 +55,7 @@ int main( int argc, char **argv )
             exit( -1 );
         }
 
-        if( ( i & 3 ) == 0 ) sleep( 1 );
+ //       if( ( i & 3 ) == 0 ) sleep( 1 );
     }
 
 
