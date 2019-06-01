@@ -65,10 +65,21 @@ void plock_destroy( plock_t *lock )
 //TODO: Check 5.5.2 implementation of Condition Variables ---
 void plock_enter( plock_t *lock, int priority )
 {
-    //pthread_mutex_lock(&lock->mlock);
+    int stats = lock->value;
+    
+    pthread_mutex_lock(&lock->mlock);
+    
     node_t* what = enQ(&(lock->head), priority);
+    
+    while( lock->value == BUSY && 
+           (priority == lock->head->priority) ){
+        
+        pthread_cond_wait(&lock->value,&lock->mlock);
+    }
+    
     pretty_print(lock->head);
-    //pthread_mutex_unlock(&lock->mlock);
+    
+    pthread_mutex_unlock(&lock->mlock);
 
 
 }
@@ -89,6 +100,7 @@ void plock_enter( plock_t *lock, int priority )
 void plock_exit( plock_t *lock )
 {
 
+    pthread_mutex_unlock(&lock->mlock);
     // return NULL;
 }
 
