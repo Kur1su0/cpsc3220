@@ -1,4 +1,9 @@
 #include "plock.h"
+/********************
+ * cpsc-3220 proj2  *
+ * Zice Wei         *
+ * C73880993        *
+ ********************/
 //Policy
 /*  1. Always use a consistent structure.
     2. Always synchronize with locks and condition variables.
@@ -19,8 +24,8 @@ void insert_thread(node_t* head, int priority);
 //      return node's pos.
 node_t* enQ(node_t** head, int priority);
 //deQ : remove node from Q and return it.
-node_t* deQ(node_t** head);
-void clean_node(node_t** _node);
+node_t* deQ(plock_t* list);
+node_t* clean_node(node_t* _node);
 
 node_t* RUNNING = NULL;
 
@@ -47,6 +52,15 @@ plock_t *plock_create()
  * using the appropriate pthread library call and finally frees the plock
  * data structure itself.
  */
+void clean_rec(node_t* rover){
+    if(rover != NULL){
+        clean_rec(rover->next);
+	//clean_node(&rover);
+        pthread_cond_destroy(&rover->waitCV);
+        free(rover);
+	rover = NULL;
+    }
+}
 
 void plock_destroy( plock_t *lock )
 {
@@ -54,7 +68,10 @@ void plock_destroy( plock_t *lock )
     while(lock->head!=NULL){
         rover = lock->head;
         lock->head = lock->head->next;
-	clean_node(&rover);
+        
+        pthread_cond_destroy(&rover->waitCV);
+        free(rover);
+	rover = NULL;
     }
     pthread_mutex_destroy(&lock->mlock);
     free(lock);
@@ -90,9 +107,10 @@ void plock_enter( plock_t *lock, int priority )
 	} 
 	pthread_cond_wait(&what->waitCV, &lock->mlock );
     }
-    lock->value=BUSY;   
-    what = deQ(&lock->head);
-    clean_node(&what);
+    lock->value=BUSY;
+    what = NULL;
+    what = deQ(lock);
+    what = clean_node(what);
      
 
     pthread_mutex_unlock(&(lock->mlock));
@@ -211,18 +229,19 @@ node_t* enQ(node_t** head, int priority){
     return tar;
 }
 //deQ : remove node from Q and return it.
-node_t* deQ(node_t** head){
-    node_t* rover = *head;
-    *head = (*head) ->next;
+node_t* deQ(plock_t* list){
+    node_t* rover = list->head;
+    list->head  = list->head->next;
     return rover;
 
 }
 
-void clean_node(node_t** what){
-    pthread_cond_destroy(&(*what)->waitCV);
-    (*what)->next = NULL;
-    free(*what);
+node_t* clean_node(node_t* what){
+    pthread_cond_destroy(&what->waitCV);
+    (what)->next = NULL;
+    free(what);
     what = NULL;
+    return what;
 
 
 }

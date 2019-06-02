@@ -1,0 +1,40 @@
+thread 0 starts with priority 0
+thread 0 ends
+thread 1 starts with priority 5
+thread 1 ends
+thread 6 starts with priority 15
+thread 6 ends
+thread 16 starts with priority 15
+thread 16 ends
+thread 8 starts with priority 14
+thread 8 ends
+thread 18 starts with priority 14
+thread 18 ends
+thread 7 starts with priority 13
+thread 7 ends
+thread 17 starts with priority 13
+thread 17 ends
+thread 9 starts with priority 11
+thread 9 ends
+thread 19 starts with priority 11
+thread 19 ends
+thread 5 starts with priority 10
+thread 5 ends
+thread 15 starts with priority 10
+thread 15 ends
+thread 11 starts with priority 5
+thread 11 ends
+thread 3 starts with priority 4
+thread 3 ends
+thread 13 starts with priority 4
+thread 13 ends
+thread 2 starts with priority 3
+thread 2 ends
+thread 12 starts with priority 3
+thread 12 ends
+thread 4 starts with priority 1
+thread 4 ends
+thread 14 starts with priority 1
+thread 14 ends
+thread 10 starts with priority 0
+thread 10 ends

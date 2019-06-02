@@ -6,7 +6,7 @@ BINS=a.out
 
 
 plock: main2.c plock.c
-	gcc -Wall plock.c main2.c -pthread
+	gcc -Wall plock.c main.c -pthread
 
 
 #sctracertest: sctracertest.c

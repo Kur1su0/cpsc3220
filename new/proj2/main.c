@@ -22,7 +22,7 @@ void *worker( void *args )
     int priority  = *( ( (int *) args ) + 1 );
     plock_enter( priority_lock, priority );
     printf( "thread %d starts with priority %d\n", thread_id, priority );
-    sleep( 2 );
+    //sleep( 2 );
     printf( "thread %d ends\n", thread_id );
     plock_exit( priority_lock );
     pthread_exit( NULL );
@@ -55,13 +55,13 @@ int main( int argc, char **argv )
             exit( -1 );
         }
 
-        if( ( i & 3 ) == 0 ) sleep( 1 );
+        //if( ( i & 3 ) == 0 ) sleep( 1 );
     }
 
 
 
     for( i = 0; i < 20; i++ ) {
-        rc = pthread_join( threads[i], NULL );
+	rc = pthread_join( threads[i], NULL );
         if( rc ) {
             printf( "** could not join thread %d\n", i );
             exit( -1 );

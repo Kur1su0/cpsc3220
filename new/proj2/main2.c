@@ -59,12 +59,20 @@ int main( int argc, char **argv )
  //  }
 
           enQ(&priority_lock->head, 4);
-          enQ(&priority_lock->head, 5);
-          enQ(&priority_lock->head, 2);
-          enQ(&priority_lock->head, 9);
-          enQ(&priority_lock->head, 8);
-
-         deQ(&priority_lock->head);
+          pretty_print(priority_lock->head);
+	  
+	  enQ(&priority_lock->head, 5);
+          pretty_print(priority_lock->head);
+          
+	  
+          node_t* _node= deQ(&priority_lock->head);
+	  printf("P:%d\n",_node->priority);
+          pretty_print(priority_lock->head);
+	  free(_node);
+          
+	  printf("destotyed\n");
+	  plock_destroy( priority_lock );
+          pretty_print(priority_lock->head);
 	  //  }
  //  }
  //  }

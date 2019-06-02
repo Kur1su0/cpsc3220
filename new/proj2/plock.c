@@ -1,4 +1,9 @@
 #include "plock.h"
+/********************
+ * cpsc-3220 proj2  *
+ * Zice Wei         *
+ * C73880993        *
+ ********************/
 //Policy
 /*  1. Always use a consistent structure.
     2. Always synchronize with locks and condition variables.
@@ -14,11 +19,7 @@
 //local helper func.
 node_t* find_thread(node_t* lock, int id, int* flag);
 void pretty_print(node_t* rover);
-void insert_thread(node_t* head, int priority);
-//enQ : insert into Queue in order of high priority
-//      return node's pos.
 node_t* enQ(node_t** head, int priority);
-//deQ : remove node from Q and return it.
 node_t* deQ(node_t** head);
 void clean_node(node_t** _node);
 

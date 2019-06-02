@@ -75,6 +75,10 @@ int main( int argc, char **argv )
 
           deQ(&priority_lock->head);
           pretty_print(priority_lock->head);
+          
+	  printf("destotyed\n");
+	  plock_destroy( priority_lock );
+          pretty_print(priority_lock->head);
 	  //  }
  //  }
  //  }
