@@ -19,7 +19,7 @@ the function inserts the header at address 0x1000 and sends back the
 address 0x1008 to the caller.
 
 The bitmap for arena 0 is indexed in a big-endian manner in each
-32-bit word in an array of bitmap words (i.e., from left-to-right).
+[32-bit] word in an array of bitmap words (i.e., from left-to-right).
 So 0x8000000 in word 0 of the bitmap represents the first block in
 arena 0, and 0x0001000 in word 2 of the bitmap represents block 79
 (i.e., 2*32 + 15) in arena 0. A 0 in the bitmap indicates that the
@@ -30,7 +30,7 @@ pointers or status bits).
 For arena 0, the free block with the lowest address, if one is
 present, should be the one allocated.
 
-The other two arenas each use the initial bytes of free blocks to
+The other two arenas each use the [initial bytes] of free blocks to
 hold the next-block pointers to implement singly-linked free lists.
 Thus free blocks in arenas 1 and 2 are not completely empty.
 
@@ -136,7 +136,28 @@ The free-block count for the appropriate arena is incremented if a
 release is successful.
 */
 void release( char *release_ptr ){
+  //check(); 
+  char *ptr;
+  long long unsigned int header, *header_ptr;
 
+  if( (long long int) release_ptr & 0x7 ){
+    printf( "pointer not aligned on 8B boundary in release() function\n" );
+    printf( "  => no action taken\n" );
+    return;
+  }
+  if( ( release_ptr < min_address ) || ( release_ptr > max_address )  ){
+    printf( "pointer out of range in release() function\n" );
+    printf( "  => no action taken\n" );
+    return;
+  }
+  ptr = release_ptr - 8;
+  header_ptr = (long long unsigned int *) ptr;
+  header = *header_ptr;
+  if( ( header & 0xfffffff0 ) != HEADER_SIGNATURE ){
+    printf( "header does not match in release() function\n" );
+    printf( "  => no action taken\n" );
+    return;
+  }
 //pass;
 }
 
