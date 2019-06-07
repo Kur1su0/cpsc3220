@@ -1,5 +1,10 @@
 #include "hybrid.h"
 
+//struct design.
+typedef struct{
+    char* what;
+
+}node;
 
 char* bitmap_allocate();
 char* list_allocate( int type );
@@ -94,8 +99,14 @@ char* bitmap_allocate(){
     return NULL;
 }
 char* list_allocate( int type ){
-
-    return NULL;
+    switch(type){
+        case 1:
+        return NULL;
+        break;
+        
+        case 2:
+        break;
+    }
 }
 /*
 The release() function returns a valid block to the appropriate bitmap
@@ -153,7 +164,7 @@ void release( char *release_ptr ){
   ptr = release_ptr - 8;
   header_ptr = (long long unsigned int *) ptr;
   header = *header_ptr;
-  if( ( header & 0xfffffff0 ) != HEADER_SIGNATURE ){
+  if( ( header & 0xfffffff0 ) != HEADER_SIGNATURE ){ //mask some to last 3
     printf( "header does not match in release() function\n" );
     printf( "  => no action taken\n" );
     return;
