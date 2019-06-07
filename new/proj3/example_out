@@ -1,0 +1,106 @@
+arena 0 base address = 0x630000 with blocksize 0x40 (= 64)
+arena 1 base address = 0x650000 with blocksize 0x100 (= 256)
+arena 2 base address = 0x640000 with blocksize 0x1000 (= 4096)
+---- arena counts for available blocks ----
+   128 blocks available in arena 0
+    32 blocks available in arena 1
+     4 blocks available in arena 2
+  bitmap words
+  0x00000000  0x00000000  0x00000000  0x00000000
+---- end ----
+ask for   -1, get (nil)
+ask for    0, get (nil)
+ask for    1, get 0x630008
+ask for    2, get 0x630048
+ask for    3, get 0x630088
+ask for    4, get 0x6300c8
+ask for    5, get 0x630108
+ask for    6, get 0x630148
+ask for    7, get 0x630188
+ask for    8, get 0x6301c8
+ask for    9, get 0x630208
+ask for   10, get 0x630248
+ask for   11, get 0x630288
+ask for   12, get 0x6302c8
+ask for   13, get 0x630308
+ask for   14, get 0x630348
+ask for   15, get 0x630388
+ask for   16, get 0x6303c8
+ask for   17, get 0x630408
+ask for   18, get 0x630448
+ask for   19, get 0x630488
+ask for   20, get 0x6304c8
+---- arena counts for available blocks ----
+   108 blocks available in arena 0
+    32 blocks available in arena 1
+     4 blocks available in arena 2
+  bitmap words
+  0xfffff000  0x00000000  0x00000000  0x00000000
+---- end ----
+ask for   21, get 0x630508
+ask for   22, get 0x630548
+ask for   23, get 0x630588
+ask for   24, get 0x6305c8
+ask for   25, get 0x630608
+ask for   26, get 0x630648
+ask for   27, get 0x630688
+ask for   28, get 0x6306c8
+ask for   29, get 0x630708
+ask for   30, get 0x630748
+ask for   31, get 0x630788
+ask for   32, get 0x6307c8
+ask for   33, get 0x630808
+ask for   34, get 0x630848
+ask for   35, get 0x630888
+ask for   36, get 0x6308c8
+ask for   37, get 0x630908
+ask for   38, get 0x630948
+ask for   39, get 0x630988
+ask for   40, get 0x6309c8
+---- arena counts for available blocks ----
+    88 blocks available in arena 0
+    32 blocks available in arena 1
+     4 blocks available in arena 2
+  bitmap words
+  0xffffffff  0xff000000  0x00000000  0x00000000
+---- end ----
+release 0x630148
+release 0x630188
+---- arena counts for available blocks ----
+    90 blocks available in arena 0
+    32 blocks available in arena 1
+     4 blocks available in arena 2
+  bitmap words
+  0xf9ffffff  0xff000000  0x00000000  0x00000000
+---- end ----
+ask for  100, get 0x650008
+ask for  100, get 0x650108
+attempt to release bad address: 0
+pointer out of range in release() function
+  => no action taken
+attempt to release bad address: p[40] + 2
+pointer not aligned on 8B boundary in release() function
+  => no action taken
+attempt to release bad address: p[40] + 32
+header does not match in release() function
+  => no action taken
+---- arena counts for available blocks ----
+    90 blocks available in arena 0
+    30 blocks available in arena 1
+     4 blocks available in arena 2
+  bitmap words
+  0xf9ffffff  0xff000000  0x00000000  0x00000000
+---- end ----
+ask for 5000, get (nil)
+ask for 1000, get 0x640008
+ask for 1000, get 0x641008
+ask for 1000, get 0x642008
+ask for 1000, get 0x643008
+---- arena counts for available blocks ----
+    90 blocks available in arena 0
+    30 blocks available in arena 1
+     0 blocks available in arena 2
+  bitmap words
+  0xf9ffffff  0xff000000  0x00000000  0x00000000
+---- end ----
+ask for 1000, get (nil)
