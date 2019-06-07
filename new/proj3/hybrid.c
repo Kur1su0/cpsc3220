@@ -1,6 +1,8 @@
-char *allocate( int size );
-void release( char *release_ptr );
+#include "hybrid.h"
 
+
+char* bitmap_allocate();
+char* list_allocate( int type );
 
 /*
 The allocate() function finds a free block that matches the requested
@@ -74,7 +76,27 @@ The free-block count for the appropriate arena is decremented if an
 allocation is successful.
 
 */
-char *allocate( int size );
+char *allocate( int size ){
+    if( size <= 0 ){
+      return NULL;
+    }else if( size <= ( arena_block_size[0] - 8 ) ){
+      return bitmap_allocate();
+    }else if( size <= ( arena_block_size[1] - 8 ) ){
+      return list_allocate( 1 );
+    }else if( size <= ( arena_block_size[2] - 8 ) ){
+      return list_allocate( 2 );
+    }else{
+      return NULL;
+    }
+}
+char* bitmap_allocate(){
+
+    return NULL;
+}
+char* list_allocate( int type ){
+
+    return NULL;
+}
 /*
 The release() function returns a valid block to the appropriate bitmap
 or free list. The function performs several sanity checks on the memory
@@ -113,6 +135,9 @@ arenas 1 and 2.
 The free-block count for the appropriate arena is incremented if a
 release is successful.
 */
-void release( char *release_ptr );
+void release( char *release_ptr ){
+
+//pass;
+}
 
 
