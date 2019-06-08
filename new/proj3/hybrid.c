@@ -82,6 +82,8 @@ allocation is successful.
 
 */
 char *allocate( int size ){
+
+  printf("****MIN: %p-----MAX:%p-------****\n", min_address, max_address);
     if( size <= 0 ){
       return NULL;
     }else if( size <= ( arena_block_size[0] - 8 ) ){
@@ -99,14 +101,25 @@ char* bitmap_allocate(){
     return NULL;
 }
 char* list_allocate( int type ){
-    switch(type){
-        case 1:
-        return NULL;
-        break;
-        
-        case 2:
-        break;
-    }
+    if(arena_count[type]==0) return NULL;
+    
+    //char* val =arena_head[type];
+    char* val =arena_head[type];
+    char** block_ptr = (char**)(arena_head[type]);
+    block_ptr = (char**)(*block_ptr);
+ 
+
+
+
+    *val =  HEADER_SIGNATURE +type; //XXX: need to cast????
+
+    arena_count[type]--;
+    arena_head[type] = (void *)block_ptr;
+    printf("****%p****\n", *((long long unsigned int *)val));
+    printf("****%p****\n", *((long long unsigned int *)val)&0xfffffff1 );
+    
+    return val+ sizeof(char*);
+
 }
 /*
 The release() function returns a valid block to the appropriate bitmap
@@ -146,11 +159,38 @@ arenas 1 and 2.
 The free-block count for the appropriate arena is incremented if a
 release is successful.
 */
-void release( char *release_ptr ){
-  //check(); 
+
+int sanity_check(char *release_ptr){
   char *ptr;
   long long unsigned int header, *header_ptr;
+  
+  if( (long long int) release_ptr & 0x7 ){
+    printf( "pointer not aligned on 8B boundary in release() function\n" );
+    printf( "  => no action taken\n" );
+    return -1;
+  }
+  if( ( release_ptr < min_address ) || ( release_ptr > max_address )  ){
+    printf( "pointer out of range in release() function\n" );
+    printf( "  => no action taken\n" );
+    return -1;
+  }
+  ptr = release_ptr - 8;
+  header_ptr = (long long unsigned int *) ptr;
+  header = *header_ptr;
+  if( ( header & 0xfffffff0 ) != HEADER_SIGNATURE ){ //mask some to last 3
+    printf( "header does not match in release() function\n" );
+    printf( "  => no action taken\n" );
+    return -1;
+  }
+  
+  return 1;
 
+}
+void release( char *release_ptr ){
+    //if(!sanity_check(release_ptr)) return;
+  char *ptr;
+  long long unsigned int header, *header_ptr;
+  
   if( (long long int) release_ptr & 0x7 ){
     printf( "pointer not aligned on 8B boundary in release() function\n" );
     printf( "  => no action taken\n" );
@@ -159,17 +199,22 @@ void release( char *release_ptr ){
   if( ( release_ptr < min_address ) || ( release_ptr > max_address )  ){
     printf( "pointer out of range in release() function\n" );
     printf( "  => no action taken\n" );
-    return;
+    return ;
   }
   ptr = release_ptr - 8;
   header_ptr = (long long unsigned int *) ptr;
   header = *header_ptr;
-  if( ( header & 0xfffffff0 ) != HEADER_SIGNATURE ){ //mask some to last 3
+  
+ if( ( header & 0xfffffff0 ) != HEADER_SIGNATURE ){ //mask some to last 3
     printf( "header does not match in release() function\n" );
     printf( "  => no action taken\n" );
     return;
   }
-//pass;
+  
+    printf("PASS\n");
+    
+       
+
 }
 
 

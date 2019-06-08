@@ -98,6 +98,10 @@ int main(){
   display_arenas();
   p[40] = allocate(  100 ); printf( "ask for  100, get %p\n", p[40] );
   p[41] = allocate(  100 ); printf( "ask for  100, get %p\n", p[41] );
+  //release( p[40] ); printf( "release %p\n", p[40] );
+  
+ // exit(1);
+  //---
   printf( "attempt to release bad address: 0\n" );
   release( (char *) 0x0 );
   printf( "attempt to release bad address: p[40] + 2\n" );
