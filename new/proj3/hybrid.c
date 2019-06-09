@@ -1,6 +1,14 @@
+/*****************
+ * Zice Wei      *
+ * cpsc 3220     *
+ * proj3         *
+ *****************/
+
 #include "hybrid.h"
 #define GROUP 32
-//struct design.
+
+//Bitset op citied from:
+// https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit
 
 char* bitmap_allocate();
 char* list_allocate( int type );
@@ -28,7 +36,6 @@ char *allocate( int size ){
 
 void print_bitmap(){
     int i = 0, j=0, bit = 0;
-    //bitmap[2] = 0x00010000;
     for(i=0; i<NUM_BITMAP_WORDS;i++){
         for(j=1; j < GROUP+1; j++){
             bit = (bitmap[i] >> (GROUP-j)) & 1UL;
@@ -40,7 +47,7 @@ void print_bitmap(){
     printf("\n");
 
 }
-//Find lowest-0-bit point where to the arena_head[0].
+//Find lowest-0-bit and point where to the arena_head[0].
 void find_min_bitmap(){
     //1. Loc empty slot
     int i = 0, j=0, bit = 0,pos=0,flag=0;
@@ -64,10 +71,6 @@ void find_min_bitmap(){
    // https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit
    bitmap[i] = (bitmap[i] & ~(1ULL << (GROUP-j))) | (1 << (GROUP-j));
    //bitmap[i] ^= (-1 ^ bitmap[i]) & (1UL << (GROUP-j));
-
-
-
-
    
 }
 
@@ -76,18 +79,10 @@ char* bitmap_allocate(){
     find_min_bitmap();
     arena_count[0]--;
     long long unsigned int *val = (long long unsigned int*)arena_head[0];
-    //long long unsigned int *val = (long long unsigned int*)ptr;
-
-    //exit(1);
     *val =  (long long unsigned int)(HEADER_SIGNATURE);
  
-    //arena_head[0] = (char*)val + ARENA_0_BLOCK_SIZE;
     if(arena_count[0]==0) arena_head[0]=NULL;
     
-    //bitmap[];
-    //int where = (arena_head[0] - min_address) / ARENA_0_BLOCK_SIZE;
-    //printf("#%d block\n",where);
-  
     return (char*)val+ sizeof(char*);
  
 }
@@ -125,15 +120,12 @@ void release( char *release_ptr ){
     header = *header_ptr;
   
     if( header == (long long unsigned int)HEADER_SIGNATURE){
-        printf("BITMAP\n");
         bitmap_free(release_ptr-8);
     }
    else if( header == (long long unsigned int)(HEADER_SIGNATURE+1)){
-       printf("1\n");
        list_release(release_ptr-8, 1);
    }
    else if( header == (long long unsigned int)(HEADER_SIGNATURE+2)) {
-       printf("2\n");
        list_release(release_ptr-8, 2);
    }
 
@@ -142,18 +134,19 @@ void release( char *release_ptr ){
 
 void bitmap_free(char* ptr){
 
-    long long unsigned int *val = (long long unsigned int*)arena_head[0];
     //get # of block
     int where = (ptr - min_address)/ARENA_0_BLOCK_SIZE;
-    *val = 0x00000000;
+    
     
     int bitmap_group = 0, entry_num = 0;
     bitmap_group = where / GROUP;
     entry_num = where % GROUP + 1;
     bitmap[bitmap_group] = (bitmap[bitmap_group] & ~(1ULL << (GROUP-entry_num))) | (0 << (GROUP-entry_num));
     arena_head[0] = ptr; 
+    long long unsigned int *val = (long long unsigned int*)arena_head[0];
+    *val = 0x00000000;
     arena_count[0]++;
-    print_bitmap();
+    //print_bitmap();
 }
 
 
