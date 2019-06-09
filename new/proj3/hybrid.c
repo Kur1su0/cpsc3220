@@ -1,5 +1,5 @@
 #include "hybrid.h"
-
+#define GROUP 32
 //struct design.
 
 char* bitmap_allocate();
@@ -8,7 +8,7 @@ int sanity_check(char *release_ptr);
 
 void list_release (char* rover, int type);
 void bitmap_free(char* release_ptr);
-
+void find_min_bitmap();
 
 
 char *allocate( int size ){
@@ -25,24 +25,69 @@ char *allocate( int size ){
       return NULL;
     }
 }
-char* bitmap_allocate(){
-   if(arena_count[0]==0) return NULL; 
-    char** block_ptr = NULL;
+
+void print_bitmap(){
+    int i = 0, j=0, bit = 0;
+    //bitmap[2] = 0x00010000;
+    for(i=0; i<NUM_BITMAP_WORDS;i++){
+        for(j=1; j < GROUP+1; j++){
+            bit = (bitmap[i] >> (GROUP-j)) & 1UL;
+            printf("%i",bit);
+        }
+        printf(" ");
+
+    }
+    printf("\n");
+
+}
+//Find lowest-0-bit point where to the arena_head[0].
+void find_min_bitmap(){
+    //1. Loc empty slot
+    int i = 0, j=0, bit = 0,pos=0,flag=0;
+    //bitmap[2] = 0x00010000;
+    for(i=0; i<NUM_BITMAP_WORDS;i++){
+        for(j=1; j < GROUP+1; j++){
+            bit = (bitmap[i] >> (GROUP-j)) & 1UL;
+            if(bit==0) {
+                pos = j+(i*GROUP);
+                flag = 1;
+                break;
+               
+                }
+        }
+        if(flag == 1) break;
+    }
+ 
+   //2.move header to empty slot.
+   arena_head[0] = min_address + (pos-1)*ARENA_0_BLOCK_SIZE;
+   //3.Bitset op citied from:
+   // https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit
+   bitmap[i] = (bitmap[i] & ~(1ULL << (GROUP-j))) | (1 << (GROUP-j));
+   //bitmap[i] ^= (-1 ^ bitmap[i]) & (1UL << (GROUP-j));
+
+
+
 
    
+}
+
+char* bitmap_allocate(){
+   if(arena_count[0]==0) return NULL; 
+    find_min_bitmap();
+    arena_count[0]--;
     long long unsigned int *val = (long long unsigned int*)arena_head[0];
+    //long long unsigned int *val = (long long unsigned int*)ptr;
 
-
-    *val =  (long long unsigned int)(HEADER_SIGNATURE); //XXX: need to cast????
+    //exit(1);
+    *val =  (long long unsigned int)(HEADER_SIGNATURE);
  
-    arena_head[0] = (char*)val + ARENA_0_BLOCK_SIZE;
+    //arena_head[0] = (char*)val + ARENA_0_BLOCK_SIZE;
     if(arena_count[0]==0) arena_head[0]=NULL;
     
     //bitmap[];
-    int where = (arena_head[0] - min_address) / ARENA_0_BLOCK_SIZE;
-    printf("#%d block\n",where);
+    //int where = (arena_head[0] - min_address) / ARENA_0_BLOCK_SIZE;
+    //printf("#%d block\n",where);
   
-    arena_count[0]--;
     return (char*)val+ sizeof(char*);
  
 }
@@ -98,10 +143,17 @@ void release( char *release_ptr ){
 void bitmap_free(char* ptr){
 
     long long unsigned int *val = (long long unsigned int*)arena_head[0];
+    //get # of block
+    int where = (ptr - min_address)/ARENA_0_BLOCK_SIZE;
     *val = 0x00000000;
+    
+    int bitmap_group = 0, entry_num = 0;
+    bitmap_group = where / GROUP;
+    entry_num = where % GROUP + 1;
+    bitmap[bitmap_group] = (bitmap[bitmap_group] & ~(1ULL << (GROUP-entry_num))) | (0 << (GROUP-entry_num));
     arena_head[0] = ptr; 
     arena_count[0]++;
-
+    print_bitmap();
 }
 
 

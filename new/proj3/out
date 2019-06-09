@@ -1,4 +1,4 @@
-rena 0 base address = 0x630000 with blocksize 0x40 (= 64)
+arena 0 base address = 0x630000 with blocksize 0x40 (= 64)
 arena 1 base address = 0x650000 with blocksize 0x100 (= 256)
 arena 2 base address = 0x640000 with blocksize 0x1000 (= 4096)
 ---- arena counts for available blocks ----
@@ -48,59 +48,19 @@ ask for   28, get 0x6306c8
 ask for   29, get 0x630708
 ask for   30, get 0x630748
 ask for   31, get 0x630788
-ask for   32, get 0x6307c8
-ask for   33, get 0x630808
-ask for   34, get 0x630848
-ask for   35, get 0x630888
-ask for   36, get 0x6308c8
-ask for   37, get 0x630908
-ask for   38, get 0x630948
-ask for   39, get 0x630988
-ask for   40, get 0x6309c8
+ask for   32, get 0x630808
+ask for   33, get 0x630848
+ask for   34, get 0x630888
+ask for   35, get 0x6308c8
+ask for   36, get 0x630908
+ask for   37, get 0x630948
+ask for   38, get 0x630988
+ask for   39, get 0x6309c8
+ask for   40, get 0x630a08
 ---- arena counts for available blocks ----
     88 blocks available in arena 0
     32 blocks available in arena 1
      4 blocks available in arena 2
   bitmap words
-  0xffffffff  0xff000000  0x00000000  0x00000000
+  0xfffffffe  0xff800000  0x00000000  0x00000000
 ---- end ----
-release 0x630148
-release 0x630188
----- arena counts for available blocks ----
-    90 blocks available in arena 0
-    32 blocks available in arena 1
-     4 blocks available in arena 2
-  bitmap words
-  0xf9ffffff  0xff000000  0x00000000  0x00000000
----- end ----
-ask for  100, get 0x650008
-ask for  100, get 0x650108
-attempt to release bad address: 0
-pointer out of range in release() function
-  => no action taken
-attempt to release bad address: p[40] + 2
-pointer not aligned on 8B boundary in release() function
-  => no action taken
-attempt to release bad address: p[40] + 32
-header does not match in release() function
-  => no action taken
----- arena counts for available blocks ----
-    90 blocks available in arena 0
-    30 blocks available in arena 1
-     4 blocks available in arena 2
-  bitmap words
-  0xf9ffffff  0xff000000  0x00000000  0x00000000
----- end ----
-ask for 5000, get (nil)
-ask for 1000, get 0x640008
-ask for 1000, get 0x641008
-ask for 1000, get 0x642008
-ask for 1000, get 0x643008
----- arena counts for available blocks ----
-    90 blocks available in arena 0
-    30 blocks available in arena 1
-     0 blocks available in arena 2
-  bitmap words
-  0xf9ffffff  0xff000000  0x00000000  0x00000000
----- end ----
-ask for 1000, get (nil)

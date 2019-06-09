@@ -94,7 +94,6 @@ int main(){
     printf( "ask for %4d, get %p\n", i + 21, p[i+20] );
   }
   display_arenas();
-  /*
   release( p[5] ); printf( "release %p\n", p[5] );
   release( p[6] ); printf( "release %p\n", p[6] );
   
@@ -102,10 +101,6 @@ int main(){
   p[40] = allocate(  100 ); printf( "ask for  100, get %p\n", p[40] );
   p[41] = allocate(  100 ); printf( "ask for  100, get %p\n", p[41] );
   
-  display_arenas();//my
-  printf("release p[41]\n");
-  release(p[41]);
-  display_arenas();//my
    
 
   printf( "attempt to release bad address: 0\n" );
@@ -122,6 +117,5 @@ int main(){
   p[46] = allocate( 1000 ); printf( "ask for 1000, get %p\n", p[46] );
   display_arenas();
   p[47] = allocate( 1000 ); printf( "ask for 1000, get %p\n", p[47] );
-*/
   return 0;
 }
