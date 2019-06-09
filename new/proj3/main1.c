@@ -104,14 +104,19 @@ int main(){
     printf( "ask for %4d, get %p\n", i + 1, p[i] );
   }
   display_arenas();
-  
+  _print_bitmap();
+  for( i = 0; i < 20; i++ ){
+     release( p[i] ); printf( "release %p\n", p[i] );
+  }
+  _print_bitmap();
+ /* 
   release( p[5] ); printf( "release %p\n", p[5] );
   release( p[6] ); printf( "release %p\n", p[6] );
   release( p[9] ); printf( "release %p\n", p[6] );
   release( p[10] ); printf( "release %p\n", p[6] );
   release( p[3] ); printf( "release %p\n", p[6] );
   display_arenas();
-
+*/
   p[3] = allocate(   3 ); printf( "ask for   3, get %p\n", p[3] );
   _print_bitmap();
 /*

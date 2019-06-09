@@ -66,7 +66,9 @@ void find_min_bitmap(){
     }
  
    //2.move header to empty slot.
-   arena_head[0] = min_address + (pos-1)*ARENA_0_BLOCK_SIZE;
+   char* min = level_0_arena;
+   arena_head[0] = min + (pos-1)*ARENA_0_BLOCK_SIZE; //Ask prof.
+   //arena_head[0] = min_address + (pos-1)*ARENA_0_BLOCK_SIZE;
    //3.Bitset op citied from:
    // https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit
    bitmap[i] = (bitmap[i] & ~(1ULL << (GROUP-j))) | (1 << (GROUP-j));
@@ -135,7 +137,9 @@ void release( char *release_ptr ){
 void bitmap_free(char* ptr){
 
     //get # of block
-    int where = (ptr - min_address)/ARENA_0_BLOCK_SIZE;
+    char* min = level_0_arena;
+    int where = (ptr - min)/ARENA_0_BLOCK_SIZE;
+    //int where = (ptr - min_address)/ARENA_0_BLOCK_SIZE;
     
     
     int bitmap_group = 0, entry_num = 0;
