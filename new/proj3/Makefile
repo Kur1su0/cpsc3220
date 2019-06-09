@@ -6,7 +6,7 @@ BINS=a.out
 
 
 hybrid: hybrid.c main.c
-	gcc -Wall hybrid.c main.c
+	gcc -g -Wall hybrid.c main.c
 
 
 #sctracertest: sctracertest.c

@@ -80,9 +80,9 @@ int main(){
 
   init_mem_alloc();
   display_arenas();
-
   p[0] = allocate(   -1 ); printf( "ask for   -1, get %p\n", p[0] );
   p[0] = allocate(    0 ); printf( "ask for    0, get %p\n", p[0] );
+  /*
   for( i = 0; i < 20; i++ ){
     p[i] = allocate( i + 1 );
     printf( "ask for %4d, get %p\n", i + 1, p[i] );
@@ -95,13 +95,17 @@ int main(){
   display_arenas();
   release( p[5] ); printf( "release %p\n", p[5] );
   release( p[6] ); printf( "release %p\n", p[6] );
+ */ 
   display_arenas();
   p[40] = allocate(  100 ); printf( "ask for  100, get %p\n", p[40] );
   p[41] = allocate(  100 ); printf( "ask for  100, get %p\n", p[41] );
-  //release( p[40] ); printf( "release %p\n", p[40] );
   
- // exit(1);
-  //---
+  display_arenas();//my
+  printf("release p[41]\n");
+  release(p[41]);
+  display_arenas();//my
+   
+
   printf( "attempt to release bad address: 0\n" );
   release( (char *) 0x0 );
   printf( "attempt to release bad address: p[40] + 2\n" );
