@@ -7,6 +7,7 @@ char* list_allocate( int type );
 int sanity_check(char *release_ptr);
 
 void list_release (char* rover, int type);
+void bitmap_free(char* release_ptr);
 
 
 
@@ -25,14 +26,27 @@ char *allocate( int size ){
     }
 }
 char* bitmap_allocate(){
+   if(arena_count[0]==0) return NULL; 
+    char** block_ptr = NULL;
 
-    return NULL;
+   
+    long long unsigned int *val = (long long unsigned int*)arena_head[0];
+
+
+    *val =  (long long unsigned int)(HEADER_SIGNATURE); //XXX: need to cast????
+ 
+    arena_head[0] = (char*)val + ARENA_0_BLOCK_SIZE;
+    if(arena_count[0]==0) arena_head[0]=NULL;
+    
+    //bitmap[];
+    int where = (arena_head[0] - min_address) / ARENA_0_BLOCK_SIZE;
+    printf("#%d block\n",where);
+  
+    arena_count[0]--;
+    return (char*)val+ sizeof(char*);
+ 
 }
 
-void move_head(int type){
-
-
-}
 char* list_allocate( int type ){
     if(arena_count[type]==0) return NULL;
     //char* val =arena_head[type];
@@ -50,7 +64,7 @@ char* list_allocate( int type ){
     *val =  (long long unsigned int)(HEADER_SIGNATURE +type); //XXX: need to cast????
  
     arena_head[type] = (char*)block_ptr;
-    
+    if(arena_count[type]==0) arena_head[type]=NULL;
     return (char*)val+ sizeof(char*);
 
 }
@@ -67,6 +81,7 @@ void release( char *release_ptr ){
   
     if( header == (long long unsigned int)HEADER_SIGNATURE){
         printf("BITMAP\n");
+        bitmap_free(release_ptr-8);
     }
    else if( header == (long long unsigned int)(HEADER_SIGNATURE+1)){
        printf("1\n");
@@ -79,6 +94,16 @@ void release( char *release_ptr ){
 
 
 }
+
+void bitmap_free(char* ptr){
+
+    long long unsigned int *val = (long long unsigned int*)arena_head[0];
+    *val = 0x00000000;
+    arena_head[0] = ptr; 
+    arena_count[0]++;
+
+}
+
 
 void list_release(char* ptr, int type){
     //ptr points to the 8-bit block.

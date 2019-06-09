@@ -82,20 +82,22 @@ int main(){
   display_arenas();
   p[0] = allocate(   -1 ); printf( "ask for   -1, get %p\n", p[0] );
   p[0] = allocate(    0 ); printf( "ask for    0, get %p\n", p[0] );
-  /*
+  
   for( i = 0; i < 20; i++ ){
     p[i] = allocate( i + 1 );
     printf( "ask for %4d, get %p\n", i + 1, p[i] );
   }
   display_arenas();
+
   for( i = 0; i < 20; i++ ){
     p[i+20] = allocate( i + 21 );
     printf( "ask for %4d, get %p\n", i + 21, p[i+20] );
   }
   display_arenas();
+  /*
   release( p[5] ); printf( "release %p\n", p[5] );
   release( p[6] ); printf( "release %p\n", p[6] );
- */ 
+  
   display_arenas();
   p[40] = allocate(  100 ); printf( "ask for  100, get %p\n", p[40] );
   p[41] = allocate(  100 ); printf( "ask for  100, get %p\n", p[41] );
@@ -120,6 +122,6 @@ int main(){
   p[46] = allocate( 1000 ); printf( "ask for 1000, get %p\n", p[46] );
   display_arenas();
   p[47] = allocate( 1000 ); printf( "ask for 1000, get %p\n", p[47] );
-
+*/
   return 0;
 }
