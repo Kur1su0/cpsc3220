@@ -20,7 +20,6 @@ void find_min_bitmap();
 
 
 char *allocate( int size ){
-
     if( size <= 0 ){
       return NULL;
     }else if( size <= ( arena_block_size[0] - 8 ) ){
@@ -51,7 +50,7 @@ void print_bitmap(){
 void find_min_bitmap(){
     //1. Loc empty slot
     int i = 0, j=0, bit = 0,pos=0,flag=0;
-    //bitmap[2] = 0x00010000;
+    //bitmap[0] = 0x80000000;
     for(i=0; i<NUM_BITMAP_WORDS;i++){
         for(j=1; j < GROUP+1; j++){
             bit = (bitmap[i] >> (GROUP-j)) & 1UL;
@@ -73,17 +72,19 @@ void find_min_bitmap(){
    // https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit
    bitmap[i] = (bitmap[i] & ~(1ULL << (GROUP-j))) | (1 << (GROUP-j));
    //bitmap[i] ^= (-1 ^ bitmap[i]) & (1UL << (GROUP-j));
+  print_bitmap();  
    
 }
 
 char* bitmap_allocate(){
-   if(arena_count[0]==0) return NULL; 
+   if(arena_count[0]==0) return NULL;
     find_min_bitmap();
-    arena_count[0]--;
     long long unsigned int *val = (long long unsigned int*)arena_head[0];
     *val =  (long long unsigned int)(HEADER_SIGNATURE);
- 
+    
+    arena_count[0]--;
     if(arena_count[0]==0) arena_head[0]=NULL;
+   // print_bitmap();
     
     return (char*)val+ sizeof(char*);
  
