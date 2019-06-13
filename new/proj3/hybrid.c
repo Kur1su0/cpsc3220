@@ -84,7 +84,7 @@ char* bitmap_allocate(){
     
     arena_count[0]--;
     if(arena_count[0]==0) arena_head[0]=NULL;
-   // print_bitmap();
+    print_bitmap();
     
     return (char*)val+ sizeof(char*);
  
