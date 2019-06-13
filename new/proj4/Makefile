@@ -4,7 +4,7 @@ flag=Wall
 BINS=a.out
 
 
-all: paging run
+#all: paging run
 
 paging: paging.c
 	gcc -Wall paging.c

@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <string.h>
+
+int verbose = 0;
+
 typedef struct{
     unsigned char presence;   /* could be single bit */
     unsigned short pad;
@@ -17,9 +22,18 @@ typedef struct{
   } CME;
 
 
-int main(){
-  
+PTE _PTE;
+TLBE _TLBE;
+CME _CME;
 
+
+int main(int argc, char* argv[]){
+    if(argc == 2){
+        verbose=strcmp(argv[1],"-v")==0?1:0;
+    }
+    printf("verbose:%d\n",verbose);
+    //Read input.
+    
     return 0;
 
 
