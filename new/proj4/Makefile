@@ -14,7 +14,7 @@ paging: paging.c
 #	$(CC) $(CFLAGS) -o sctracertest sctracertest.c
 
 run: a.out
-	./a.out
+	./a.out < sample/trace1
 
 clean:
 	rm $(BINS)

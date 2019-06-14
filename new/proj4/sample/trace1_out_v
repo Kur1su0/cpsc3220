@@ -1,0 +1,104 @@
+paging simulation
+  65536 virtual pages in the virtual address space
+  4 physical page frames
+  2 TLB entries
+  use vectors in core map are shifted every 4 accesses
+
+access 1:
+  virtual address is              0x000000
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x0000
+  tlb update of vpn 0x0000 with pfn 0x00
+access 2:
+  virtual address is              0x000101
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x0101
+  tlb update of vpn 0x0001 with pfn 0x01
+access 3:
+  virtual address is              0x000202
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x0202
+  tlb update of vpn 0x0002 with pfn 0x02
+access 4:
+  virtual address is              0x000303
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x0303
+  tlb update of vpn 0x0003 with pfn 0x03
+shift use vectors
+access 5:
+  virtual address is              0x000000
+  tlb miss
+  page hit, physical address is     0x0000
+  tlb update of vpn 0x0000 with pfn 0x00
+access 6:
+  virtual address is              0x000101
+  tlb miss
+  page hit, physical address is     0x0101
+  tlb update of vpn 0x0001 with pfn 0x01
+access 7:
+  virtual address is              0x000202
+  tlb miss
+  page hit, physical address is     0x0202
+  tlb update of vpn 0x0002 with pfn 0x02
+access 8:
+  virtual address is              0x000303
+  tlb miss
+  page hit, physical address is     0x0303
+  tlb update of vpn 0x0003 with pfn 0x03
+shift use vectors
+access 9:
+  virtual address is              0x000000
+  tlb miss
+  page hit, physical address is     0x0000
+  tlb update of vpn 0x0000 with pfn 0x00
+access 10:
+  virtual address is              0x000101
+  tlb miss
+  page hit, physical address is     0x0101
+  tlb update of vpn 0x0001 with pfn 0x01
+access 11:
+  virtual address is              0x000202
+  tlb miss
+  page hit, physical address is     0x0202
+  tlb update of vpn 0x0002 with pfn 0x02
+access 12:
+  virtual address is              0x000303
+  tlb miss
+  page hit, physical address is     0x0303
+  tlb update of vpn 0x0003 with pfn 0x03
+shift use vectors
+
+statistics
+  accesses    = 12
+  tlb misses  = 12
+  page faults = 4
+
+tlb
+  valid = 1, vpn = 0x0002, pfn = 0x02
+  valid = 1, vpn = 0x0003, pfn = 0x03
+
+core map table
+  pfn = 0x00: valid = 1, use vector = 0x70, vpn = 0x0000
+  pfn = 0x01: valid = 1, use vector = 0x70, vpn = 0x0001
+  pfn = 0x02: valid = 1, use vector = 0x70, vpn = 0x0002
+  pfn = 0x03: valid = 1, use vector = 0x70, vpn = 0x0003
+
+first ten entries of page table
+  vpn = 0x0000: presence = 1, pfn = 0x00
+  vpn = 0x0001: presence = 1, pfn = 0x01
+  vpn = 0x0002: presence = 1, pfn = 0x02
+  vpn = 0x0003: presence = 1, pfn = 0x03
+  vpn = 0x0004: presence = 0, pfn = 0x00
+  vpn = 0x0005: presence = 0, pfn = 0x00
+  vpn = 0x0006: presence = 0, pfn = 0x00
+  vpn = 0x0007: presence = 0, pfn = 0x00
+  vpn = 0x0008: presence = 0, pfn = 0x00
+  vpn = 0x0009: presence = 0, pfn = 0x00
