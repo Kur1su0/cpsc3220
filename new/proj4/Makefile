@@ -7,7 +7,7 @@ BINS=a.out
 #all: paging run
 
 paging: paging.c
-	gcc -Wall paging.c
+	gcc -Wall paging.c -std=c99
 
 
 #sctracertest: sctracertest.c

@@ -109,7 +109,7 @@ int main(int argc, char* argv[]){
         printf("  65536 virtual pages in the virtual address space\n");
         printf("  %d physical page frames\n",cfg.PF);
         printf("  %d TLB entries\n",cfg.TE);
-        printf("  use vectors in core map are shifted every %d accesses\n",cfg.UP);
+        printf("  use vectors in core map are shifted every %d accesses\n\n",cfg.UP);
 
     }
     alloca_entry();
@@ -132,7 +132,7 @@ int main(int argc, char* argv[]){
        }
     }
     if(verbose==0){
-    printf("statistics\n");
+    printf("\nstatistics\n");
     printf("  accesses    = %d\n",access);
     printf("  tlb misses  = %d\n",tlb_miss);
     printf("  page faults = %d\n",page_fault);
@@ -171,7 +171,7 @@ int process(){
     int where = 0; 
     if(verbose==1){
         printf("access %d:\n",access);
-        printf("  virtual address is%14s0x%06x:\n"," ",buf);
+        printf("  virtual address is%14s0x%06x\n"," ",buf);
 
     }
     //split
@@ -196,14 +196,15 @@ int process(){
 
    if(pte[vpn].presence==1){
    //page hit..Use pfn.
-       if(verbose==1)printf("  page hit, physical address is%5s0x%04x%02x\n"," ",pte[vpn].pfn,offset);
+       if(verbose==1)printf("  page hit, physical address is%5s0x%02x%02x\n"," ",pte[vpn].pfn,offset);
        //Update TLB.
        where = update_tlb(vpn,pte[vpn].pfn);
+       cme[pte[vpn].pfn].use_vector|=0x80;
        return where;
    }else{
    //Page fault.
        page_fault++;
-       if(verbose==1)printf("  page falut\n");
+       if(verbose==1)printf("  page fault\n");
        where = process_frame(vpn,offset);
        return where;
 
@@ -230,7 +231,7 @@ int process_frame(unsigned short vpn, unsigned char offset){
    }
 
    if(free_frame_flag==1){
-       if(verbose==1) printf("  unsued page frame allocated\n");
+       if(verbose==1) printf("  unused page frame allocated\n");
        cme[i].vpn=vpn;
        cme[i].use_vector|=0x80;
      
@@ -247,7 +248,7 @@ int process_frame(unsigned short vpn, unsigned char offset){
          
    }else{
        if(verbose==1) printf("  page replacement needed\n");
-       unsigned char min_vector = cme[0].use_vector;
+       unsigned int min_vector = cme[0].use_vector;
        int min_index = 0;
        for(i=0; i<cfg.PF; i++){
            if(cme[i].use_vector < min_vector){
@@ -263,6 +264,7 @@ int process_frame(unsigned short vpn, unsigned char offset){
            }
        }
        cme[min_index].use_vector = 0x00;
+ //      cme[min_index].use_vector|=0x80;
        cme[min_index].vpn = vpn;
        pte[vpn].pfn = (unsigned char)min_index;
        where = update_tlb(vpn,min_index);
@@ -300,7 +302,7 @@ int update_tlb(unsigned short vpn, unsigned char pfn){
 
 void debug_display(){
 
-    printf("statistics\n");
+    printf("\nstatistics\n");
     printf("  accesses    = %d\n",access);
     printf("  tlb misses  = %d\n",tlb_miss);
     printf("  page faults = %d\n",page_fault);
@@ -311,7 +313,7 @@ void debug_display(){
     }
     printf("\ncore map table\n");
     for(int i=0; i<cfg.PF; i++){
-        printf("  pfn = 0x%02x: valid = %d, use vector = 0x%02x vpn = 0x%04x\n",
+        printf("  pfn = 0x%02x: valid = %d, use vector = 0x%02x, vpn = 0x%04x\n",
                    i, cme[i].valid, cme[i].use_vector, cme[i].vpn);
     }
     printf("\nfirst ten entries of page table\n");
