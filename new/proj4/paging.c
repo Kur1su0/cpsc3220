@@ -2,7 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXSIZE 10000
+/**************************************
+ *  Zice Wei                          *
+ *  cpsc-3220                         *
+ *  project 4                         *
+ *  (See instruction in the makefile) *
+ *                                    *
+ **************************************/
 
 
 void debug_display();
