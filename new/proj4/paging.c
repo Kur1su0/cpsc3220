@@ -140,7 +140,11 @@ int main(int argc, char* argv[]){
     }else{
         debug_display();
     }
-    //stdin stream
+    
+    free(pte);
+    free(tlbe);
+    free(cme);
+
     return 0;
 }
 void set_bit(char type[4],unsigned short* vpn, unsigned char* pfn){
