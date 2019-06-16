@@ -119,6 +119,7 @@ int main(int argc, char* argv[]){
        //printf("0x%06x\t",buf);
        if(check_bit_len(buf)==1){
           debug_display();
+          printf("\n");
        }else{
            access++;
            //print_bitmap();
@@ -132,7 +133,7 @@ int main(int argc, char* argv[]){
        }
     }
     if(verbose==0){
-    printf("\nstatistics\n");
+    printf("statistics\n");
     printf("  accesses    = %d\n",access);
     printf("  tlb misses  = %d\n",tlb_miss);
     printf("  page faults = %d\n",page_fault);
@@ -164,7 +165,6 @@ void set_bit(char type[4],unsigned short* vpn, unsigned char* pfn){
     }
 }
 
-void update_vector();
 
 int process(){
     //2A. Find TLB hits
@@ -185,7 +185,8 @@ int process(){
     for(i=0; i<cfg.TE; i++){
         if(vpn==tlbe[i].vpn && tlbe[i].valid==1){
             //TLB hit. Use pfn get phy addr.
-            if(verbose==1)printf("  tlb hit, physical address is 0x%02x%02x\n",tlbe[i].vpn,offset);
+            cme[tlbe[i].pfn].use_vector|=0x80;
+            if(verbose==1)printf("  tlb hit, physical address is%6s0x%02x%02x\n"," ",tlbe[i].vpn,offset);
             return -1;
         }
     }
@@ -248,27 +249,38 @@ int process_frame(unsigned short vpn, unsigned char offset){
          
    }else{
        if(verbose==1) printf("  page replacement needed\n");
-       unsigned int min_vector = cme[0].use_vector;
-       int min_index = 0;
+       unsigned int min_vector = 0xfff;
+       int min_index = cfg.PF;
        for(i=0; i<cfg.PF; i++){
-           if(cme[i].use_vector < min_vector){
+           if((cme[i].use_vector < min_vector) && (cme[i].use_vector!=0x00)){
                min_index = i;
                min_vector = cme[i].use_vector;
            }
-       } 
-       
+       }
+       if (min_vector==0xfff){
+           min_index = 0;
+           min_vector = cme[0].use_vector;
+
+       }
+       if(verbose==1) printf("  TLB invalidate of vpn 0x%x\n",cme[min_index].vpn); //TODO:wrong val?
        for(i=0;i<cfg.TE;i++){
-           if(tlbe[i].pfn == min_index){
-               if(verbose==1) printf("  TLB invalidate of vpn 0x%02x\n",vpn); //TODO:wrong val?
+           if(tlbe[i].vpn == cme[min_index].vpn){
                tlbe[i].valid = 0;
+               tlbe[i].vpn = 0x0;
+               tlbe[i].pfn = 0x0;
            }
        }
+       //Clean old page table & core map
+       pte[(int)cme[min_index].vpn].presence = 0;
+       pte[(int)cme[min_index].vpn].pfn = 0x0;
+
+       //Build new page & core map.
        cme[min_index].use_vector = 0x00;
- //      cme[min_index].use_vector|=0x80;
+       cme[min_index].use_vector|=0x80;
        cme[min_index].vpn = vpn;
        pte[vpn].pfn = (unsigned char)min_index;
        where = update_tlb(vpn,min_index);
-       pte[min_index].presence=1;
+       pte[vpn].presence=1;
        if(verbose==1) {
            printf("  replace frame %d\n",min_index);
            printf("  physical address is%15s0x%02x%02x\n"," ",min_index,offset);
@@ -292,6 +304,7 @@ int update_tlb(unsigned short vpn, unsigned char pfn){
     i = current_tlb;
     tlbe[current_tlb].pfn = pte[vpn].pfn;
     tlbe[current_tlb].vpn = vpn;
+    tlbe[current_tlb].valid = 1;
     current_tlb++;
     current_tlb%=cfg.TE;
     
@@ -301,8 +314,8 @@ int update_tlb(unsigned short vpn, unsigned char pfn){
 
 
 void debug_display(){
-
-    printf("\nstatistics\n");
+    if(verbose==1) printf("\n");
+    printf("statistics\n");
     printf("  accesses    = %d\n",access);
     printf("  tlb misses  = %d\n",tlb_miss);
     printf("  page faults = %d\n",page_fault);
@@ -321,6 +334,5 @@ void debug_display(){
         printf("  vpn = 0x%04x: presence = %d, pfn = 0x%02x\n",
                  i, pte[i].presence,pte[i].pfn);
     }
-    
 
 } 

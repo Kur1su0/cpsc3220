@@ -1,0 +1,4 @@
+statistics
+  accesses    = 12
+  tlb misses  = 12
+  page faults = 12

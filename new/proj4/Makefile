@@ -1,20 +1,24 @@
+
+#############
+# Cpsc-3220 #
+# Project 4 #
+# Zice Wei  #
+# C73880993 #
+#############
+
+#instruction:1.make
+#            2. ./a.out -v < trace
+#             a trace file and pagging.cfg file required.
+
 CC=gcc
 flag=Wall
 
 BINS=a.out
 
 
-#all: paging run
-
 paging: paging.c
 	gcc -Wall paging.c -std=c99
 
-
-#sctracertest: sctracertest.c
-#	$(CC) $(CFLAGS) -o sctracertest sctracertest.c
-
-run: a.out
-	./a.out < sample/trace1
 
 clean:
 	rm $(BINS)
