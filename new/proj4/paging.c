@@ -6,8 +6,8 @@
  *  Zice Wei                          *
  *  cpsc-3220                         *
  *  project 4                         *
- *  (See instruction in the makefile) *
- *                                    *
+ *  Usage:                            *
+ *  gcc -Wall paging.c -std=c99       *                           *
  **************************************/
 
 
