@@ -1,0 +1,105 @@
+paging simulation
+  65536 virtual pages in the virtual address space
+  5 physical page frames
+  3 TLB entries
+  use vectors in core map are shifted every 1 accesses
+
+access 1:
+  virtual address is              0x012345
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x0045
+  tlb update of vpn 0x0123 with pfn 0x00
+shift use vectors
+access 2:
+  virtual address is              0x6789ab
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x01ab
+  tlb update of vpn 0x6789 with pfn 0x01
+shift use vectors
+access 3:
+  virtual address is              0xcdef01
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x0201
+  tlb update of vpn 0xcdef with pfn 0x02
+shift use vectors
+access 4:
+  virtual address is              0x234567
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x0367
+  tlb update of vpn 0x2345 with pfn 0x03
+shift use vectors
+access 5:
+  virtual address is              0x89abcd
+  tlb miss
+  page fault
+  unused page frame allocated
+  physical address is               0x04cd
+  tlb update of vpn 0x89ab with pfn 0x04
+shift use vectors
+access 6:
+  virtual address is              0xef0123
+  tlb miss
+  page fault
+  page replacement needed
+  TLB invalidate of vpn 0x123
+  replace frame 0
+  physical address is               0x0023
+  tlb update of vpn 0xef01 with pfn 0x00
+shift use vectors
+access 7:
+  virtual address is              0x456789
+  tlb miss
+  page fault
+  page replacement needed
+  TLB invalidate of vpn 0x6789
+  replace frame 1
+  physical address is               0x0189
+  tlb update of vpn 0x4567 with pfn 0x01
+shift use vectors
+access 8:
+  virtual address is              0xabcdef
+  tlb miss
+  page fault
+  page replacement needed
+  TLB invalidate of vpn 0xcdef
+  replace frame 2
+  physical address is               0x02ef
+  tlb update of vpn 0xabcd with pfn 0x02
+shift use vectors
+
+statistics
+  accesses    = 8
+  tlb misses  = 8
+  page faults = 8
+
+tlb
+  valid = 1, vpn = 0x4567, pfn = 0x01
+  valid = 1, vpn = 0xabcd, pfn = 0x02
+  valid = 1, vpn = 0xef01, pfn = 0x00
+
+core map table
+  pfn = 0x00: valid = 1, use vector = 0x10, vpn = 0xef01
+  pfn = 0x01: valid = 1, use vector = 0x20, vpn = 0x4567
+  pfn = 0x02: valid = 1, use vector = 0x40, vpn = 0xabcd
+  pfn = 0x03: valid = 1, use vector = 0x04, vpn = 0x2345
+  pfn = 0x04: valid = 1, use vector = 0x08, vpn = 0x89ab
+
+first ten entries of page table
+  vpn = 0x0000: presence = 0, pfn = 0x00
+  vpn = 0x0001: presence = 0, pfn = 0x00
+  vpn = 0x0002: presence = 0, pfn = 0x00
+  vpn = 0x0003: presence = 0, pfn = 0x00
+  vpn = 0x0004: presence = 0, pfn = 0x00
+  vpn = 0x0005: presence = 0, pfn = 0x00
+  vpn = 0x0006: presence = 0, pfn = 0x00
+  vpn = 0x0007: presence = 0, pfn = 0x00
+  vpn = 0x0008: presence = 0, pfn = 0x00
+  vpn = 0x0009: presence = 0, pfn = 0x00

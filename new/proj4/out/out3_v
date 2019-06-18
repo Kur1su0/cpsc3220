@@ -1,8 +1,8 @@
 paging simulation
   65536 virtual pages in the virtual address space
-  4 physical page frames
-  2 TLB entries
-  use vectors in core map are shifted every 4 accesses
+  5 physical page frames
+  3 TLB entries
+  use vectors in core map are shifted every 1 accesses
 
 access 1:
   virtual address is              0x000000
@@ -11,6 +11,7 @@ access 1:
   unused page frame allocated
   physical address is               0x0000
   tlb update of vpn 0x0000 with pfn 0x00
+shift use vectors
 access 2:
   virtual address is              0x000101
   tlb miss
@@ -18,6 +19,7 @@ access 2:
   unused page frame allocated
   physical address is               0x0101
   tlb update of vpn 0x0001 with pfn 0x01
+shift use vectors
 access 3:
   virtual address is              0x000202
   tlb miss
@@ -25,6 +27,7 @@ access 3:
   unused page frame allocated
   physical address is               0x0202
   tlb update of vpn 0x0002 with pfn 0x02
+shift use vectors
 
 statistics
   accesses    = 3
@@ -32,14 +35,16 @@ statistics
   page faults = 3
 
 tlb
-  valid = 1, vpn = 0x0002, pfn = 0x02
+  valid = 1, vpn = 0x0000, pfn = 0x00
   valid = 1, vpn = 0x0001, pfn = 0x01
+  valid = 1, vpn = 0x0002, pfn = 0x02
 
 core map table
-  pfn = 0x00: valid = 1, use vector = 0x80, vpn = 0x0000
-  pfn = 0x01: valid = 1, use vector = 0x80, vpn = 0x0001
-  pfn = 0x02: valid = 1, use vector = 0x80, vpn = 0x0002
+  pfn = 0x00: valid = 1, use vector = 0x10, vpn = 0x0000
+  pfn = 0x01: valid = 1, use vector = 0x20, vpn = 0x0001
+  pfn = 0x02: valid = 1, use vector = 0x40, vpn = 0x0002
   pfn = 0x03: valid = 0, use vector = 0x00, vpn = 0x0000
+  pfn = 0x04: valid = 0, use vector = 0x00, vpn = 0x0000
 
 first ten entries of page table
   vpn = 0x0000: presence = 1, pfn = 0x00
@@ -55,28 +60,29 @@ first ten entries of page table
 
 access 4:
   virtual address is              0x000000
-  tlb miss
-  page hit, physical address is     0x0000
-  tlb update of vpn 0x0000 with pfn 0x00
+  tlb hit, physical address is      0x0000
 shift use vectors
 access 5:
   virtual address is              0x000202
   tlb hit, physical address is      0x0202
+shift use vectors
 
 statistics
   accesses    = 5
-  tlb misses  = 4
+  tlb misses  = 3
   page faults = 3
 
 tlb
-  valid = 1, vpn = 0x0002, pfn = 0x02
   valid = 1, vpn = 0x0000, pfn = 0x00
+  valid = 1, vpn = 0x0001, pfn = 0x01
+  valid = 1, vpn = 0x0002, pfn = 0x02
 
 core map table
-  pfn = 0x00: valid = 1, use vector = 0x40, vpn = 0x0000
-  pfn = 0x01: valid = 1, use vector = 0x40, vpn = 0x0001
-  pfn = 0x02: valid = 1, use vector = 0xc0, vpn = 0x0002
+  pfn = 0x00: valid = 1, use vector = 0x24, vpn = 0x0000
+  pfn = 0x01: valid = 1, use vector = 0x08, vpn = 0x0001
+  pfn = 0x02: valid = 1, use vector = 0x50, vpn = 0x0002
   pfn = 0x03: valid = 0, use vector = 0x00, vpn = 0x0000
+  pfn = 0x04: valid = 0, use vector = 0x00, vpn = 0x0000
 
 first ten entries of page table
   vpn = 0x0000: presence = 1, pfn = 0x00

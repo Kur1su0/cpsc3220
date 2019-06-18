@@ -1,8 +1,8 @@
 paging simulation
   65536 virtual pages in the virtual address space
-  4 physical page frames
-  2 TLB entries
-  use vectors in core map are shifted every 4 accesses
+  5 physical page frames
+  3 TLB entries
+  use vectors in core map are shifted every 1 accesses
 
 access 1:
   virtual address is              0x000000
@@ -11,6 +11,7 @@ access 1:
   unused page frame allocated
   physical address is               0x0000
   tlb update of vpn 0x0000 with pfn 0x00
+shift use vectors
 access 2:
   virtual address is              0x000101
   tlb miss
@@ -18,6 +19,7 @@ access 2:
   unused page frame allocated
   physical address is               0x0101
   tlb update of vpn 0x0001 with pfn 0x01
+shift use vectors
 access 3:
   virtual address is              0x000202
   tlb miss
@@ -25,6 +27,7 @@ access 3:
   unused page frame allocated
   physical address is               0x0202
   tlb update of vpn 0x0002 with pfn 0x02
+shift use vectors
 access 4:
   virtual address is              0x000303
   tlb miss
@@ -37,75 +40,79 @@ access 5:
   virtual address is              0x000404
   tlb miss
   page fault
-  page replacement needed
-  TLB invalidate of vpn 0x0
-  replace frame 0
-  physical address is               0x0004
-  tlb update of vpn 0x0004 with pfn 0x00
+  unused page frame allocated
+  physical address is               0x0404
+  tlb update of vpn 0x0004 with pfn 0x04
+shift use vectors
 access 6:
   virtual address is              0x000505
   tlb miss
   page fault
   page replacement needed
-  TLB invalidate of vpn 0x1
-  replace frame 1
-  physical address is               0x0105
-  tlb update of vpn 0x0005 with pfn 0x01
+  TLB invalidate of vpn 0x0
+  replace frame 0
+  physical address is               0x0005
+  tlb update of vpn 0x0005 with pfn 0x00
+shift use vectors
 access 7:
   virtual address is              0x000606
   tlb miss
   page fault
   page replacement needed
-  TLB invalidate of vpn 0x2
-  replace frame 2
-  physical address is               0x0206
-  tlb update of vpn 0x0006 with pfn 0x02
+  TLB invalidate of vpn 0x1
+  replace frame 1
+  physical address is               0x0106
+  tlb update of vpn 0x0006 with pfn 0x01
+shift use vectors
 access 8:
   virtual address is              0x000000
   tlb miss
   page fault
   page replacement needed
-  TLB invalidate of vpn 0x3
-  replace frame 3
-  physical address is               0x0300
-  tlb update of vpn 0x0000 with pfn 0x03
+  TLB invalidate of vpn 0x2
+  replace frame 2
+  physical address is               0x0200
+  tlb update of vpn 0x0000 with pfn 0x02
 shift use vectors
 access 9:
   virtual address is              0x000101
   tlb miss
   page fault
   page replacement needed
-  TLB invalidate of vpn 0x4
-  replace frame 0
-  physical address is               0x0001
-  tlb update of vpn 0x0001 with pfn 0x00
+  TLB invalidate of vpn 0x3
+  replace frame 3
+  physical address is               0x0301
+  tlb update of vpn 0x0001 with pfn 0x03
+shift use vectors
 access 10:
   virtual address is              0x000202
   tlb miss
   page fault
   page replacement needed
-  TLB invalidate of vpn 0x5
-  replace frame 1
-  physical address is               0x0102
-  tlb update of vpn 0x0002 with pfn 0x01
+  TLB invalidate of vpn 0x4
+  replace frame 4
+  physical address is               0x0402
+  tlb update of vpn 0x0002 with pfn 0x04
+shift use vectors
 access 11:
   virtual address is              0x000303
   tlb miss
   page fault
   page replacement needed
-  TLB invalidate of vpn 0x6
-  replace frame 2
-  physical address is               0x0203
-  tlb update of vpn 0x0003 with pfn 0x02
+  TLB invalidate of vpn 0x5
+  replace frame 0
+  physical address is               0x0003
+  tlb update of vpn 0x0003 with pfn 0x00
+shift use vectors
 access 12:
   virtual address is              0x000404
   tlb miss
   page fault
   page replacement needed
-  TLB invalidate of vpn 0x0
-  replace frame 3
-  physical address is               0x0304
-  tlb update of vpn 0x0004 with pfn 0x03
+  TLB invalidate of vpn 0x6
+  replace frame 1
+  physical address is               0x0104
+  tlb update of vpn 0x0004 with pfn 0x01
 shift use vectors
 
 statistics
@@ -114,21 +121,23 @@ statistics
   page faults = 12
 
 tlb
-  valid = 1, vpn = 0x0003, pfn = 0x02
-  valid = 1, vpn = 0x0004, pfn = 0x03
+  valid = 1, vpn = 0x0002, pfn = 0x04
+  valid = 1, vpn = 0x0003, pfn = 0x00
+  valid = 1, vpn = 0x0004, pfn = 0x01
 
 core map table
-  pfn = 0x00: valid = 1, use vector = 0x40, vpn = 0x0001
-  pfn = 0x01: valid = 1, use vector = 0x40, vpn = 0x0002
-  pfn = 0x02: valid = 1, use vector = 0x40, vpn = 0x0003
-  pfn = 0x03: valid = 1, use vector = 0x40, vpn = 0x0004
+  pfn = 0x00: valid = 1, use vector = 0x20, vpn = 0x0003
+  pfn = 0x01: valid = 1, use vector = 0x40, vpn = 0x0004
+  pfn = 0x02: valid = 1, use vector = 0x04, vpn = 0x0000
+  pfn = 0x03: valid = 1, use vector = 0x08, vpn = 0x0001
+  pfn = 0x04: valid = 1, use vector = 0x10, vpn = 0x0002
 
 first ten entries of page table
-  vpn = 0x0000: presence = 0, pfn = 0x00
-  vpn = 0x0001: presence = 1, pfn = 0x00
-  vpn = 0x0002: presence = 1, pfn = 0x01
-  vpn = 0x0003: presence = 1, pfn = 0x02
-  vpn = 0x0004: presence = 1, pfn = 0x03
+  vpn = 0x0000: presence = 1, pfn = 0x02
+  vpn = 0x0001: presence = 1, pfn = 0x03
+  vpn = 0x0002: presence = 1, pfn = 0x04
+  vpn = 0x0003: presence = 1, pfn = 0x00
+  vpn = 0x0004: presence = 1, pfn = 0x01
   vpn = 0x0005: presence = 0, pfn = 0x00
   vpn = 0x0006: presence = 0, pfn = 0x00
   vpn = 0x0007: presence = 0, pfn = 0x00

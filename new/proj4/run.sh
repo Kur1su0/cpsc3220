@@ -8,6 +8,8 @@ make
 ./a.out < sample/trace3  > out/out3
 ./a.out -v < sample/trace3  > out/out3_v
 
+./a.out -v < sample/trace4 >out/out4_v
+
 diff out/out1 sample/trace1_out
 diff out/out1_v sample/trace1_out_v
 
@@ -17,4 +19,5 @@ diff out/out2_v sample/trace2_out_v
 diff out/out3 sample/trace3_out
 diff out/out3_v sample/trace3_out_v
 
+diff out/out4_v sample/trace4_out_v
 echo "identical!"
