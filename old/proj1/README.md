@@ -1,5 +1,3 @@
-Zice Wei
-
 ## Project 1.
 ### KNOWN PROBLEMS:
                 1.program 2 : additional exit_group.

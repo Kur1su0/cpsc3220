@@ -3,8 +3,6 @@
 #include <string.h>
 
 /**************************************
- *  Zice Wei                          *
- *  cpsc-3220                         *
  *  project 4                         *
  *  Usage:                            *
  *  gcc -Wall paging.c -std=c99       *                           *

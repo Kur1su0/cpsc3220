@@ -1,8 +1,6 @@
 #include "plock.h"
 /********************
  * cpsc-3220 proj2  *
- * Zice Wei         *
- * C73880993        *
  ********************/
 //Policy
 /*  1. Always use a consistent structure.

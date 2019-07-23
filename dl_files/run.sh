@@ -10,7 +10,7 @@ fi
 #lib req for python: requests. beautifulSoup
 echo "DL documents"
 python dl.py
-#uncomment below to convert pptx to pdf
+#uncomment below to convert *.pptx to *.pdf
 echo "convert pptx to pdf"
 if [ -d "slides/" ];then
     echo "slides/ exits"
@@ -22,4 +22,6 @@ fi
 cp file/*.pptx slides/
 cd slides
 libreoffice --headless --invisible --convert-to pdf *.pptx
+
+#uncomment below to remove *.pptx
 rm -v *.pptx
